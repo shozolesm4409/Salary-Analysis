@@ -158,6 +158,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     IESD Summary
                   </Link>
                   <Link
+                    to="/taken-summary"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-l transition-colors",
+                      location.pathname === '/taken-summary'
+                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <Wallet className="w-4 h-4 mr-2" />
+                    Taken Summary
+                  </Link>
+                  <Link
                     to="/dsm-dashboard"
                     onClick={() => setIsSidebarOpen(false)}
                     className={cn(
@@ -264,8 +277,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             >
               <Menu className="w-6 h-6" />
             </button>
-            <Wallet className="w-8 h-8 text-blue-600 mr-2" />
-            <span className="text-xl font-bold text-slate-800">FinDash</span>
+            <Link to="/" className="flex items-center">
+              <Wallet className="w-8 h-8 text-blue-600 mr-2" />
+              <span className="text-xl font-bold text-slate-800">FinDash</span>
+            </Link>
           </div>
 
           <div className="hidden lg:flex items-center">

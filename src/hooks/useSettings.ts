@@ -98,6 +98,8 @@ export function useSettings() {
         { id: 'dsm_financial_dashboard', name: 'dsm_financial_dashboard', label: 'DSM Financial Dashboard (DBP)', isHidden: false },
         { id: 'increment_record', name: 'increment_record', label: 'Increment Record Table', isHidden: false },
         { id: 'increment_deleted', name: 'increment_deleted', label: 'Increment Deleted Table', isHidden: false },
+        { id: 'taken_given', name: 'taken_given', label: 'Taken & Given Table', isHidden: false },
+        { id: 'lend_give_back', name: 'lend_give_back', label: 'Lend & Give Back Table', isHidden: false },
       ];
 
       // Ensure all default settings exist in Firestore
@@ -136,6 +138,8 @@ export function useSettings() {
         { id: 'dsm_financial_dashboard', name: 'dsm_financial_dashboard', label: 'DSM Financial Dashboard (DBP)', isHidden: false },
         { id: 'increment_record', name: 'increment_record', label: 'Increment Record Table', isHidden: false },
         { id: 'increment_deleted', name: 'increment_deleted', label: 'Increment Deleted Table', isHidden: false },
+        { id: 'taken_given', name: 'taken_given', label: 'Taken & Given Table', isHidden: false },
+        { id: 'lend_give_back', name: 'lend_give_back', label: 'Lend & Give Back Table', isHidden: false },
       ];
       setTableSettings(defaultSettings);
     });

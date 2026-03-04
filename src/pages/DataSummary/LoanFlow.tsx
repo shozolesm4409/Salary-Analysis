@@ -487,7 +487,7 @@ export default function LoanFlow() {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-y-4 gap-x-4 text-sm">
+            <div className="grid grid-cols-3 gap-y-4 gap-x-2 text-sm">
               <div>
                 <p className="text-slate-500 mb-1 text-xs">Loan Amount</p>
                 <p className="text-blue-600 font-bold">{row.loanAmount.toLocaleString()}</p>

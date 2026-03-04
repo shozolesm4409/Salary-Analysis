@@ -14,7 +14,7 @@ export interface Transaction {
 export interface Category {
   id?: string;
   name: string;
-  type: 'income' | 'expense';
+  type: 'income' | 'expense' | 'both';
   hidden: boolean;
 }
 

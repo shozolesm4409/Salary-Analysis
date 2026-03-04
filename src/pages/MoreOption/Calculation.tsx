@@ -246,123 +246,123 @@ export default function Calculation() {
             <table className="w-full border-collapse border border-blue-200">
               <thead>
                 <tr className="bg-blue-600 text-white">
-                  <th className="p-2 border border-blue-300">Field Type</th>
-                  <th className="p-2 border border-blue-300">Summary Details</th>
-                  <th className="p-2 border border-blue-300">Per Day Amount</th>
-                  <th className="p-2 border border-blue-300">Amount</th>
+                  <th className="p-1 border border-blue-300">Field Type</th>
+                  <th className="p-1 border border-blue-300">Summary Details</th>
+                  <th className="p-1 border border-blue-300">Per Day Amount</th>
+                  <th className="p-1 border border-blue-300">Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="p-2 border border-blue-200">Employee Salary</td>
-                  <td className="p-2 border border-blue-200">1 Day = {calc3.toFixed(2)}</td>
-                  <td className="p-2 border border-blue-200">1 Govt. Holiday = {calc4.toFixed(2)}</td>
-                  <td className="p-2 border border-blue-200">{empSalary.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">Employee Salary</td>
+                  <td className="p-1 border border-blue-200">1 Day = {calc3.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">1 Govt. Holiday = {calc4.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">{empSalary.toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td className="p-2 border border-blue-200">Enter Days</td>
-                  <td className="p-2 border border-blue-200">Days = {eDays}</td>
-                  <td className="p-2 border border-blue-200">Basic Salary</td>
-                  <td className="p-2 border border-blue-200">{salary60.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">Enter Days</td>
+                  <td className="p-1 border border-blue-200">Days = {eDays}</td>
+                  <td className="p-1 border border-blue-200">Basic Salary</td>
+                  <td className="p-1 border border-blue-200">{salary60.toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td className="p-2 border border-blue-200">Employee Type</td>
-                  <td className="p-2 border border-blue-200">{employeeType}</td>
-                  <td className="p-2 border border-blue-200">Extra Salary</td>
-                  <td className="p-2 border border-blue-200">{salary40.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">Employee Type</td>
+                  <td className="p-1 border border-blue-200">{employeeType}</td>
+                  <td className="p-1 border border-blue-200">Extra Salary</td>
+                  <td className="p-1 border border-blue-200">{salary40.toFixed(2)}</td>
                 </tr>
                 <tr className="bg-blue-50 font-bold">
-                  <td colSpan={3} className="p-2 border border-blue-200">Salary Amount</td>
-                  <td className="p-2 border border-blue-200">{subTotal.toFixed(2)}</td>
+                  <td colSpan={3} className="p-1 border border-blue-200">Salary Amount</td>
+                  <td className="p-1 border border-blue-200">{subTotal.toFixed(2)}</td>
                 </tr>
                 <tr className="bg-slate-100 font-bold text-center">
-                  <td colSpan={4} className="p-2 border border-blue-200">Adjustments</td>
+                  <td colSpan={4} className="p-1 border border-blue-200">Adjustments</td>
                 </tr>
                 {wDays > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Weekend Days</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Included Total Weekend = {wDays}</td>
-                    <td className="p-2 border border-blue-200">{calc1.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Weekend Days</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Included Total Weekend = {wDays}</td>
+                    <td className="p-1 border border-blue-200">{calc1.toFixed(2)}</td>
                   </tr>
                 )}
                 {gHols > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Govt Holidays</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Included Total Govt. Holidays = {gHols}</td>
-                    <td className="p-2 border border-blue-200">{calc2.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Govt Holidays</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Included Total Govt. Holidays = {gHols}</td>
+                    <td className="p-1 border border-blue-200">{calc2.toFixed(2)}</td>
                   </tr>
                 )}
                 {addEidBonus && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Eid Bonus</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Included to Total Salary</td>
-                    <td className="p-2 border border-blue-200">{eidBonusAmount.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Eid Bonus</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Included to Total Salary</td>
+                    <td className="p-1 border border-blue-200">{eidBonusAmount.toFixed(2)}</td>
                   </tr>
                 )}
                 {addMlssNasta && (
                   <tr>
-                    <td className="p-2 border border-blue-200">MLSS Nasta</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Included EnterDay + Weekend = {(eDays + wDays)} x 20</td>
-                    <td className="p-2 border border-blue-200">{nastaAmount.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">MLSS Nasta</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Included EnterDay + Weekend = {(eDays + wDays)} x 20</td>
+                    <td className="p-1 border border-blue-200">{nastaAmount.toFixed(2)}</td>
                   </tr>
                 )}
                 {exAmt > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Extra Amount</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Included Children Allowance/Increment</td>
-                    <td className="p-2 border border-blue-200">{exAmt.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Extra Amount</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Included Children Allowance/Increment</td>
+                    <td className="p-1 border border-blue-200">{exAmt.toFixed(2)}</td>
                   </tr>
                 )}
                 {includedAmount > 0 && (
                   <tr className="bg-green-50 text-green-700 font-bold">
-                    <td colSpan={3} className="p-2 border border-blue-200">Included amount = Added to the Total salary.</td>
-                    <td className="p-2 border border-blue-200">{includedAmount.toFixed(2)}</td>
+                    <td colSpan={3} className="p-1 border border-blue-200">Included amount = Added to the Total salary.</td>
+                    <td className="p-1 border border-blue-200">{includedAmount.toFixed(2)}</td>
                   </tr>
                 )}
                 {lBill > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Lunch Bill</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Excluded from Total Salary</td>
-                    <td className="p-2 border border-blue-200">-{lBill.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Lunch Bill</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Excluded from Total Salary</td>
+                    <td className="p-1 border border-blue-200">-{lBill.toFixed(2)}</td>
                   </tr>
                 )}
                 {pCash > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">PettyCash (IOU) Amount</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Excluded from Total Salary</td>
-                    <td className="p-2 border border-blue-200">-{pCash.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">PettyCash (IOU) Amount</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Excluded from Total Salary</td>
+                    <td className="p-1 border border-blue-200">-{pCash.toFixed(2)}</td>
                   </tr>
                 )}
                 {employeeType === "Permanent" && (
                   <tr>
-                    <td className="p-2 border border-blue-200">ORG Saving</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Excluded (Basic 5%) from Total Salary</td>
-                    <td className="p-2 border border-blue-200">-{orgSaving.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">ORG Saving</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Excluded (Basic 5%) from Total Salary</td>
+                    <td className="p-1 border border-blue-200">-{orgSaving.toFixed(2)}</td>
                   </tr>
                 )}
                 {lwp > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Leave Without Pay Amount</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Excluded (1x = {calc3.toFixed(2)}) from Total Salary = {lwp}</td>
-                    <td className="p-2 border border-blue-200">-{calc5.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Leave Without Pay Amount</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Excluded (1x = {calc3.toFixed(2)}) from Total Salary = {lwp}</td>
+                    <td className="p-1 border border-blue-200">-{calc5.toFixed(2)}</td>
                   </tr>
                 )}
                 {abs > 0 && (
                   <tr>
-                    <td className="p-2 border border-blue-200">Absent Amount</td>
-                    <td colSpan={2} className="p-2 border border-blue-200">Excluded (1.5x = {calc4.toFixed(2)}) from Total Salary = {abs}</td>
-                    <td className="p-2 border border-blue-200">-{calc6.toFixed(2)}</td>
+                    <td className="p-1 border border-blue-200">Absent Amount</td>
+                    <td colSpan={2} className="p-1 border border-blue-200">Excluded (1.5x = {calc4.toFixed(2)}) from Total Salary = {abs}</td>
+                    <td className="p-1 border border-blue-200">-{calc6.toFixed(2)}</td>
                   </tr>
                 )}
                 {excludedAmount > 0 && (
                   <tr className="bg-red-50 text-red-700 font-bold">
-                    <td colSpan={3} className="p-2 border border-blue-200">Excluded Amount = Excluded from the Total salary.</td>
-                    <td className="p-2 border border-blue-200">-{excludedAmount.toFixed(2)}</td>
+                    <td colSpan={3} className="p-1 border border-blue-200">Excluded Amount = Excluded from the Total salary.</td>
+                    <td className="p-1 border border-blue-200">-{excludedAmount.toFixed(2)}</td>
                   </tr>
                 )}
                 <tr className="bg-blue-600 text-white font-bold">
-                  <td colSpan={3} className="p-2 border border-blue-300">Total Salary</td>
-                  <td className="p-2 border border-blue-300">{grandTotal.toFixed(2)}</td>
+                  <td colSpan={3} className="p-1 border border-blue-300">Total Salary</td>
+                  <td className="p-1 border border-blue-300">{grandTotal.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -396,28 +396,28 @@ export default function Calculation() {
             <table className="w-full border-collapse border border-blue-200">
               <thead>
                 <tr className="bg-blue-600 text-white">
-                  <th className="p-2 border border-blue-300">Field Type</th>
-                  <th className="p-2 border border-blue-300">Summary Details</th>
-                  <th className="p-2 border border-blue-300">Per Leave Amount</th>
-                  <th className="p-2 border border-blue-300">Amount</th>
+                  <th className="p-1 border border-blue-300">Field Type</th>
+                  <th className="p-1 border border-blue-300">Summary Details</th>
+                  <th className="p-1 border border-blue-300">Per Leave Amount</th>
+                  <th className="p-1 border border-blue-300">Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="p-2 border border-blue-200">Previous EL Amount</td>
-                  <td className="p-2 border border-blue-200">Previous EL Days = {pDays}</td>
-                  <td className="p-2 border border-blue-200">{onepelamount}</td>
-                  <td className="p-2 border border-blue-200">{previousELAmount.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">Previous EL Amount</td>
+                  <td className="p-1 border border-blue-200">Previous EL Days = {pDays}</td>
+                  <td className="p-1 border border-blue-200">{onepelamount}</td>
+                  <td className="p-1 border border-blue-200">{previousELAmount.toFixed(2)}</td>
                 </tr>
                 <tr>
-                  <td className="p-2 border border-blue-200">Running EL Amount</td>
-                  <td className="p-2 border border-blue-200">Running EL Days = {rDays}</td>
-                  <td className="p-2 border border-blue-200">{onerelamount}</td>
-                  <td className="p-2 border border-blue-200">{runningELAmount.toFixed(2)}</td>
+                  <td className="p-1 border border-blue-200">Running EL Amount</td>
+                  <td className="p-1 border border-blue-200">Running EL Days = {rDays}</td>
+                  <td className="p-1 border border-blue-200">{onerelamount}</td>
+                  <td className="p-1 border border-blue-200">{runningELAmount.toFixed(2)}</td>
                 </tr>
                 <tr className="bg-blue-600 text-white font-bold">
-                  <td colSpan={3} className="p-2 border border-blue-300">Total EL Amount</td>
-                  <td className="p-2 border border-blue-300">{totalELAmount.toFixed(2)}</td>
+                  <td colSpan={3} className="p-1 border border-blue-300">Total EL Amount</td>
+                  <td className="p-1 border border-blue-300">{totalELAmount.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -498,7 +498,7 @@ export default function Calculation() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div className="p-6 border-b border-slate-100 bg-slate-50/50">
+        <div className="p-3 border-b border-slate-100 bg-slate-50/50">
           <div className="flex flex-nowrap overflow-x-auto gap-2 justify-center no-scrollbar">
             {(['Salary', 'Earned', 'Increment', 'Working Hour'] as CalculationType[]).map((type) => (
               <button
@@ -508,7 +508,7 @@ export default function Calculation() {
                   handleClear();
                 }}
                 className={cn(
-                  "px-3 sm:px-6 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-sm font-semibold transition-all shadow-sm whitespace-nowrap",
+                  "px-3 sm:px-6 py-1.5 sm:py-2 rounded-l text-[10px] sm:text-sm font-semibold transition-all shadow-sm whitespace-nowrap",
                   activeType === type
                     ? "bg-blue-600 text-white shadow-blue-200"
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
@@ -518,13 +518,13 @@ export default function Calculation() {
               </button>
             ))}
           </div>
-          <h2 className="text-2xl font-bold text-center mt-6 text-slate-800">
+          <h2 className="text-2xl font-bold text-center mt-3 text-slate-800">
             {activeType} Calculation
           </h2>
         </div>
 
-        <div className="p-6">
-          <form onSubmit={handleCalculate} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="p-3">
+          <form onSubmit={handleCalculate} className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
             {activeType === 'Salary' && (
               <>
                 <div className="space-y-2">
@@ -539,7 +539,7 @@ export default function Calculation() {
                         setEnterDays('26');
                       }
                     }}
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   >
                     <option>Select Type</option>
                     <option>Contractual</option>
@@ -555,7 +555,7 @@ export default function Calculation() {
                     value={salary}
                     onChange={(e) => setSalary(e.target.value)}
                     placeholder="Enter Amounts"
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   />
                 </div>
                 <div className="space-y-2">
@@ -563,7 +563,7 @@ export default function Calculation() {
                   <select 
                     value={enterDays}
                     onChange={(e) => setEnterDays(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   >
                     <option value="0">Select Days</option>
                     {[26, 28, 29, 30, 31].map(d => <option key={d} value={d}>{d}</option>)}
@@ -574,7 +574,7 @@ export default function Calculation() {
                   <select 
                     value={weekendDays}
                     onChange={(e) => setWeekendDays(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   >
                     <option value="0">Select Days</option>
                     {[1, 2, 3, 4, 5].map(d => <option key={d} value={d}>{d}</option>)}
@@ -585,14 +585,14 @@ export default function Calculation() {
                   <select 
                     value={govtHolidays}
                     onChange={(e) => setGovtHolidays(e.target.value)}
-                    className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                    className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   >
                     <option value="0">Select Days</option>
                     {[1, 2, 3].map(d => <option key={d} value={d}>{d}</option>)}
                   </select>
                 </div>
 
-                <div className="lg:col-span-2 grid grid-cols-2 gap-4">
+                <div className="col-span-2 lg:col-span-2 grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-sm font-medium text-slate-600 cursor-pointer">
                       <input type="checkbox" checked={addEidBonus} onChange={(e) => setAddEidBonus(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
@@ -630,31 +630,31 @@ export default function Calculation() {
                 {showExtraAmount && (
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700">Extra Amount:</label>
-                    <input type="number" value={extraAmount} onChange={(e) => setExtraAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    <input type="number" value={extraAmount} onChange={(e) => setExtraAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                   </div>
                 )}
                 {showLunchBill && (
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700">Lunch Bill:</label>
-                    <input type="number" value={lunchBillAmount} onChange={(e) => setLunchBillAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    <input type="number" value={lunchBillAmount} onChange={(e) => setLunchBillAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                   </div>
                 )}
                 {showPettyCash && (
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700">PettyCash (IOU):</label>
-                    <input type="number" value={pettyCashAmount} onChange={(e) => setPettyCashAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    <input type="number" value={pettyCashAmount} onChange={(e) => setPettyCashAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                   </div>
                 )}
                 {showLeaveWithoutPay && (
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700">Leave Without Pay:</label>
-                    <input type="number" value={leaveWithoutPayDays} onChange={(e) => setLeaveWithoutPayDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    <input type="number" value={leaveWithoutPayDays} onChange={(e) => setLeaveWithoutPayDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                   </div>
                 )}
                 {showAbsent && (
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700">Absent Days:</label>
-                    <input type="number" value={absentDays} onChange={(e) => setAbsentDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                    <input type="number" value={absentDays} onChange={(e) => setAbsentDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                   </div>
                 )}
               </>
@@ -664,23 +664,23 @@ export default function Calculation() {
               <>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Previous Salary:</label>
-                  <input type="number" value={previousSalary} onChange={(e) => setPreviousSalary(e.target.value)} placeholder="Enter Previous Salary" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                  <input type="number" value={previousSalary} onChange={(e) => setPreviousSalary(e.target.value)} placeholder="Enter Previous Salary" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Running Salary:</label>
-                  <input type="number" value={runningSalary} onChange={(e) => setRunningSalary(e.target.value)} placeholder="Enter Running Salary" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                  <input type="number" value={runningSalary} onChange={(e) => setRunningSalary(e.target.value)} placeholder="Enter Running Salary" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Previous EL Days:</label>
-                  <input type="number" value={previousELDays} onChange={(e) => setPreviousELDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                  <input type="number" value={previousELDays} onChange={(e) => setPreviousELDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Running EL Days:</label>
-                  <input type="number" value={runningELDays} onChange={(e) => setRunningELDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                  <input type="number" value={runningELDays} onChange={(e) => setRunningELDays(e.target.value)} placeholder="Enter Days" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Enter Days:</label>
-                  <select value={enterDays} onChange={(e) => setEnterDays(e.target.value)} className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  <select value={enterDays} onChange={(e) => setEnterDays(e.target.value)} className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="20">20</option>
                     <option value="26">26</option>
                   </select>
@@ -692,25 +692,25 @@ export default function Calculation() {
               <>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Increment Amount:</label>
-                  <input type="number" value={incrementAmount} onChange={(e) => setIncrementAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
+                  <input type="number" value={incrementAmount} onChange={(e) => setIncrementAmount(e.target.value)} placeholder="Enter Amount" className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Total Months:</label>
-                  <select value={totalMonths} onChange={(e) => setTotalMonths(e.target.value)} className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  <select value={totalMonths} onChange={(e) => setTotalMonths(e.target.value)} className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="--Select--">--Select--</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => <option key={m} value={m}>{m}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Enter Days:</label>
-                  <select value={enterDays} onChange={(e) => setEnterDays(e.target.value)} className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  <select value={enterDays} onChange={(e) => setEnterDays(e.target.value)} className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="26">26</option>
                     <option value="30">30</option>
                   </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Eid Bonus:</label>
-                  <select value={eidBonusSelect} onChange={(e) => setEidBonusSelect(e.target.value)} className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+                  <select value={eidBonusSelect} onChange={(e) => setEidBonusSelect(e.target.value)} className="w-full h-11 px-2 rounded-l border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
                     <option value="">--Select--</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -720,16 +720,16 @@ export default function Calculation() {
             )}
 
             {activeType !== 'Working Hour' && (
-              <div className="lg:col-span-4 flex flex-row justify-center gap-2 sm:gap-4 mt-4">
-                <button type="submit" className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+              <div className="col-span-2 lg:col-span-4 flex flex-row justify-center gap-2 sm:gap-4 mt-4">
+                <button type="submit" className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-blue-600 text-white rounded-l font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
                   <Calculator className="w-3.5 h-3.5 sm:w-5 h-5" />
                   Calculate
                 </button>
-                <button type="button" onClick={handleClear} className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-all shadow-lg shadow-red-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <button type="button" onClick={handleClear} className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-red-500 text-white rounded-l font-bold hover:bg-red-600 transition-all shadow-lg shadow-red-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
                   <Trash2 className="w-3.5 h-3.5 sm:w-5 h-5" />
                   Clear
                 </button>
-                <button type="button" onClick={handlePrint} className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 transition-all shadow-lg shadow-slate-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                <button type="button" onClick={handlePrint} className="flex-1 sm:flex-none px-2 sm:px-8 py-2 sm:py-3 bg-slate-800 text-white rounded-l font-bold hover:bg-slate-900 transition-all shadow-lg shadow-slate-100 flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm">
                   <Printer className="w-3.5 h-3.5 sm:w-5 h-5" />
                   Print
                 </button>
@@ -739,7 +739,7 @@ export default function Calculation() {
 
           {activeType === 'Working Hour' && (
             <div className="mt-8 space-y-6">
-              <div className="overflow-x-auto rounded-xl border border-slate-200">
+              <div className="overflow-x-auto rounded-l border border-slate-200">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-blue-600 text-white">
@@ -785,8 +785,8 @@ export default function Calculation() {
                 </table>
               </div>
               <div className="flex justify-center gap-2 sm:gap-4">
-                <button onClick={handleClear} className="flex-1 sm:flex-none px-4 sm:px-8 py-2 sm:py-3 bg-red-500 text-white rounded-xl font-bold hover:bg-red-600 transition-all text-xs sm:text-sm">Clear</button>
-                <button onClick={handlePrint} className="flex-1 sm:flex-none px-4 sm:px-8 py-2 sm:py-3 bg-slate-800 text-white rounded-xl font-bold hover:bg-slate-900 transition-all text-xs sm:text-sm">Print</button>
+                <button onClick={handleClear} className="flex-1 sm:flex-none px-4 sm:px-8 py-2 sm:py-3 bg-red-500 text-white rounded-l font-bold hover:bg-red-600 transition-all text-xs sm:text-sm">Clear</button>
+                <button onClick={handlePrint} className="flex-1 sm:flex-none px-4 sm:px-8 py-2 sm:py-3 bg-slate-800 text-white rounded-l font-bold hover:bg-slate-900 transition-all text-xs sm:text-sm">Print</button>
               </div>
             </div>
           )}
@@ -797,7 +797,7 @@ export default function Calculation() {
               <div className="space-y-10">
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-slate-800">Amount Summary</h3>
-                  <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <div className="overflow-x-auto rounded-l border border-slate-200">
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="bg-slate-800 text-white">
@@ -827,7 +827,7 @@ export default function Calculation() {
 
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-slate-800">Monthly Increment Summary</h3>
-                  <div className="overflow-x-auto rounded-xl border border-slate-200">
+                  <div className="overflow-x-auto rounded-l border border-slate-200">
                     <table className="w-full border-collapse">
                       <thead>
                         <tr className="bg-blue-600 text-white text-xs uppercase tracking-wider">

@@ -16,6 +16,7 @@ import LandingPage from '@/pages/LandingPage/LandingPage';
 import EditProfile from '@/pages/DataSummary/EditProfile';
 import TMIEPDFFilter from '@/pages/DataSummary/TMIEPDFFilter';
 import UploadTransactions from '@/pages/Settings/UploadTransactions';
+import TakenSummary from '@/pages/DataSummary/TakenSummary';
 
 import LoanFlow from '@/pages/DataSummary/LoanFlow';
 
@@ -49,11 +50,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={
-            <PublicRoute>
-              <LandingPage />
-            </PublicRoute>
-          } />
+          <Route path="/" element={<LandingPage />} />
 
           <Route path="/login" element={
             <PublicRoute>
@@ -129,6 +126,14 @@ export default function App() {
             <PrivateRoute>
               <DashboardLayout>
                 <IESDSummary />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/taken-summary" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <TakenSummary />
               </DashboardLayout>
             </PrivateRoute>
           } />
