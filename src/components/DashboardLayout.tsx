@@ -184,6 +184,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     DSM-Dashboard
                   </Link>
                   <Link
+                    to="/categories-summary"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-l transition-colors",
+                      location.pathname === '/categories-summary'
+                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    Categories
+                  </Link>
+                  <Link
                     to="/loan-flow"
                     onClick={() => setIsSidebarOpen(false)}
                     className={cn(

@@ -10,13 +10,13 @@ interface TablesProps {
 export default function Tables({ tableSettings, updateTableSetting }: TablesProps) {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-      <div className="p-4 border-b border-slate-100">
+      <div className="p-2 border-b border-slate-100">
         <h3 className="text-lg font-bold text-slate-900">Table Visibility Management</h3>
         <p className="text-sm text-slate-500">Toggle visibility of tables across the application</p>
       </div>
       <div className="divide-y divide-slate-100 max-h-[400px] overflow-y-auto scrollbar-thin">
         {tableSettings.map((setting) => (
-          <div key={setting.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+          <div key={setting.id} className="p-2 flex items-center justify-between hover:bg-slate-50 transition-colors">
             <div className="flex items-center gap-4">
               <div className={cn(
                 "p-2 rounded-lg",

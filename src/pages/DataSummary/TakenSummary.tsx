@@ -16,7 +16,7 @@ interface SummaryRow {
 
 export default function TakenSummary() {
   const { transactions, loading: txLoading } = useTransactions();
-  const { isTableHidden, loading: settingsLoading } = useSettings();
+  const { isTableHidden, isActionHidden, loading: settingsLoading } = useSettings();
   const [activeTab, setActiveTab] = useState<'taken_given' | 'lend_give_back'>('taken_given');
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -165,17 +165,19 @@ export default function TakenSummary() {
           <table className="w-full text-left border-collapse block md:table">
             <thead className="hidden md:table-header-group sticky top-0 z-10 bg-slate-50 border-b border-slate-200 shadow-sm">
               <tr className="md:table-row">
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">SL</th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Department</th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">SL</th>
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Department</th>
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
                   {activeTab === 'taken_given' ? 'Taken' : 'Lend'}
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">
                   {activeTab === 'taken_given' ? 'Given' : 'Give Back'}
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Due</th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Status</th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">View Details</th>
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Due</th>
+                <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Status</th>
+                {!isActionHidden('taken_summary_action') && (
+                  <th className="px-4 py-.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">View Details</th>
+                )}
               </tr>
             </thead>
             <tbody className="block md:table-row-group">
@@ -195,12 +197,14 @@ export default function TakenSummary() {
                           }`}>
                             {row.status}
                           </span>
-                          <button
-                            onClick={() => handleViewDetails(row.department)}
-                            className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
-                          >
-                            <Eye className="w-5 h-5" />
-                          </button>
+                          {!isActionHidden('taken_summary_action') && (
+                            <button
+                              onClick={() => handleViewDetails(row.department)}
+                              className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
+                            >
+                              <Eye className="w-5 h-5" />
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div className="grid grid-cols-3 gap-2 text-center">
@@ -222,37 +226,39 @@ export default function TakenSummary() {
                     </td>
 
                     {/* Desktop View */}
-                    <td className="hidden md:table-cell px-4 py-3 text-sm text-slate-500 border-b border-slate-100">
+                    <td className="hidden md:table-cell px-4 py-.5 text-sm text-slate-500 border-b border-slate-100">
                       {index + 1}
                     </td>
-                    <td className="hidden md:table-cell px-4 py-3 text-sm font-medium text-slate-900 border-b border-slate-100">
+                    <td className="hidden md:table-cell px-4 py-.5 text-sm font-medium text-slate-900 border-b border-slate-100">
                       {row.department}
                     </td>
-                    <td className="hidden md:table-cell px-4 py-3 text-sm font-bold text-emerald-600 text-right border-b border-slate-100">
+                    <td className="hidden md:table-cell px-4 py-.5 text-sm font-bold text-emerald-600 text-right border-b border-slate-100">
                       {row.amount1.toLocaleString()}
                     </td>
-                    <td className="hidden md:table-cell px-4 py-3 text-sm font-bold text-blue-600 text-right border-b border-slate-100">
+                    <td className="hidden md:table-cell px-4 py-.5 text-sm font-bold text-blue-600 text-right border-b border-slate-100">
                       {row.amount2.toLocaleString()}
                     </td>
-                    <td className={`hidden md:table-cell px-4 py-3 text-sm font-bold text-right border-b border-slate-100 ${row.due > 0 ? 'text-red-600' : row.due < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
+                    <td className={`hidden md:table-cell px-4 py-.5 text-sm font-bold text-right border-b border-slate-100 ${row.due > 0 ? 'text-red-600' : row.due < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
                       {row.due.toLocaleString()}
                     </td>
-                    <td className="hidden md:table-cell px-4 py-3 text-center border-b border-slate-100">
+                    <td className="hidden md:table-cell px-4 py-.5 text-center border-b border-slate-100">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         row.status === 'Settled' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                       }`}>
                         {row.status}
                       </span>
                     </td>
-                    <td className="hidden md:table-cell px-4 py-3 text-center border-b border-slate-100">
-                      <button
-                        onClick={() => handleViewDetails(row.department)}
-                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors inline-flex items-center justify-center"
-                        title="View Details"
-                      >
-                        <Eye className="w-5 h-5" />
-                      </button>
-                    </td>
+                    {!isActionHidden('taken_summary_action') && (
+                      <td className="hidden md:table-cell px-4 py-.5 text-center border-b border-slate-100">
+                        <button
+                          onClick={() => handleViewDetails(row.department)}
+                          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors inline-flex items-center justify-center"
+                          title="View Details"
+                        >
+                          <Eye className="w-5 h-5" />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (
@@ -318,18 +324,18 @@ export default function TakenSummary() {
                   <table className="w-full text-left text-sm block md:table">
                     <thead className="hidden md:table-header-group sticky top-0 z-10 bg-slate-50 border-b border-slate-200 shadow-sm">
                       <tr className="md:table-row">
-                        <th className="px-4 py-3 font-semibold text-slate-600">Date</th>
-                        <th className="px-4 py-3 font-semibold text-slate-600">Category</th>
-                        <th className="px-4 py-3 font-semibold text-slate-600">Type</th>
-                        <th className="px-4 py-3 font-semibold text-slate-600">Department</th>
-                        <th className="px-4 py-3 font-semibold text-slate-600 text-right">Amount</th>
+                        <th className="px-4 py-.5 font-semibold text-slate-600">Date</th>
+                        <th className="px-4 py-.5 font-semibold text-slate-600">Category</th>
+                        <th className="px-4 py-.5 font-semibold text-slate-600">Type</th>
+                        <th className="px-4 py-.5 font-semibold text-slate-600">Department</th>
+                        <th className="px-4 py-.5 font-semibold text-slate-600 text-right">Amount</th>
                       </tr>
                     </thead>
                     <tbody className="block md:table-row-group">
                       {selectedRow.transactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(t => (
                         <tr key={t.id} className="block md:table-row bg-white mb-3 md:mb-0 border border-slate-200 md:border-none rounded-xl md:rounded-none shadow-sm md:shadow-none hover:bg-slate-50 transition-colors">
                           {/* Mobile View */}
-                          <td className="md:hidden block px-4 py-3">
+                          <td className="md:hidden block px-4 py-.5">
                             <div className="flex justify-between items-center mb-2">
                               <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium capitalize ${
                                 t.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
@@ -346,23 +352,23 @@ export default function TakenSummary() {
                           </td>
                           
                           {/* Desktop View */}
-                          <td className="hidden md:table-cell px-4 py-3 text-slate-600 whitespace-nowrap border-b border-slate-100">
+                          <td className="hidden md:table-cell px-4 py-.5 text-slate-600 whitespace-nowrap border-b border-slate-100">
                             {format(new Date(t.date), 'dd MMM yyyy')}
                           </td>
-                          <td className="hidden md:table-cell px-4 py-3 font-medium capitalize whitespace-nowrap border-b border-slate-100">
+                          <td className="hidden md:table-cell px-4 py-.5 font-medium capitalize whitespace-nowrap border-b border-slate-100">
                             {t.category}
                           </td>
-                          <td className="hidden md:table-cell px-4 py-3 whitespace-nowrap border-b border-slate-100">
+                          <td className="hidden md:table-cell px-4 py-.5 whitespace-nowrap border-b border-slate-100">
                             <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium capitalize ${
                               t.type === 'income' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
                             }`}>
                               {t.type}
                             </span>
                           </td>
-                          <td className="hidden md:table-cell px-4 py-3 text-slate-600 whitespace-nowrap border-b border-slate-100">
+                          <td className="hidden md:table-cell px-4 py-.5 text-slate-600 whitespace-nowrap border-b border-slate-100">
                             {t.department}
                           </td>
-                          <td className="hidden md:table-cell px-4 py-3 text-right font-bold text-slate-700 whitespace-nowrap border-b border-slate-100">
+                          <td className="hidden md:table-cell px-4 py-.5 text-right font-bold text-slate-700 whitespace-nowrap border-b border-slate-100">
                             {t.amount.toLocaleString()}
                           </td>
                         </tr>

@@ -17,6 +17,7 @@ import EditProfile from '@/pages/DataSummary/EditProfile';
 import TMIEPDFFilter from '@/pages/DataSummary/TMIEPDFFilter';
 import UploadTransactions from '@/pages/Settings/UploadTransactions';
 import TakenSummary from '@/pages/DataSummary/TakenSummary';
+import CategoriesSummary from '@/pages/DataSummary/CategoriesSummary';
 
 import LoanFlow from '@/pages/DataSummary/LoanFlow';
 
@@ -134,6 +135,14 @@ export default function App() {
             <PrivateRoute>
               <DashboardLayout>
                 <TakenSummary />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/categories-summary" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <CategoriesSummary />
               </DashboardLayout>
             </PrivateRoute>
           } />

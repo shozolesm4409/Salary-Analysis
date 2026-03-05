@@ -81,8 +81,11 @@ export default function TransactionForm({ onClose, initialData, isInline = false
       .map(t => t.department);
     finalDepartmentsToDisplay = Array.from(new Set(dynamicDepartments)).filter(Boolean);
   } else if (normalizedCategory === 'saving') {
-    // Only show specific departments for Saving
-    finalDepartmentsToDisplay = ['ORG', 'Personal', 'Saving Mobile'];
+    // Only show specific departments for Saving, including DPS related
+    const dpsDepartments = allDepartments
+      .filter(dept => dept.name.toLowerCase().includes('dps'))
+      .map(dept => dept.name);
+    finalDepartmentsToDisplay = Array.from(new Set(['ORG', 'Personal', 'Saving Mobile', ...dpsDepartments]));
   } else if (normalizedCategory === 'bank loan') {
     // Only show departments containing "Loan" or "BkashL"
     finalDepartmentsToDisplay = allDepartments
@@ -105,7 +108,7 @@ export default function TransactionForm({ onClose, initialData, isInline = false
       const lowerName = deptName.toLowerCase();
       const isLoanOrBkash = lowerName.includes('loan') || lowerName.includes('bkashl');
       const isRestrictedDynamic = dynamicRestrictedDepartments.has(deptName);
-      const isSavingDept = savingDepartments.has(deptName);
+      const isSavingDept = savingDepartments.has(deptName) || lowerName.includes('dps');
       return !isLoanOrBkash && !isRestrictedDynamic && !isSavingDept;
     });
   }
@@ -134,7 +137,7 @@ export default function TransactionForm({ onClose, initialData, isInline = false
           <button
             type="button"
             disabled={!!initialData}
-            onClick={() => setType('income')}
+            onClick={() => { setType('income'); setFormData({ ...formData, category: '', department: '' }); }}
             className={`py-2 text-sm font-medium rounded-md transition-all ${
               type === 'income' 
                 ? 'bg-white text-emerald-600 shadow-sm' 
@@ -146,7 +149,7 @@ export default function TransactionForm({ onClose, initialData, isInline = false
           <button
             type="button"
             disabled={!!initialData}
-            onClick={() => setType('expense')}
+            onClick={() => { setType('expense'); setFormData({ ...formData, category: '', department: '' }); }}
             className={`py-2 text-sm font-medium rounded-md transition-all ${
               type === 'expense' 
                 ? 'bg-white text-red-600 shadow-sm' 
@@ -194,7 +197,7 @@ export default function TransactionForm({ onClose, initialData, isInline = false
             <select
               required
               value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value, department: '' })}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
             >
               <option value="">Select Category</option>

@@ -100,6 +100,7 @@ export function useSettings() {
         { id: 'increment_deleted', name: 'increment_deleted', label: 'Increment Deleted Table', isHidden: false },
         { id: 'taken_given', name: 'taken_given', label: 'Taken & Given Table', isHidden: false },
         { id: 'lend_give_back', name: 'lend_give_back', label: 'Lend & Give Back Table', isHidden: false },
+        { id: 'categories_summary', name: 'categories_summary', label: 'Categories Summary Table', isHidden: false },
       ];
 
       // Ensure all default settings exist in Firestore
@@ -140,6 +141,7 @@ export function useSettings() {
         { id: 'increment_deleted', name: 'increment_deleted', label: 'Increment Deleted Table', isHidden: false },
         { id: 'taken_given', name: 'taken_given', label: 'Taken & Given Table', isHidden: false },
         { id: 'lend_give_back', name: 'lend_give_back', label: 'Lend & Give Back Table', isHidden: false },
+        { id: 'categories_summary', name: 'categories_summary', label: 'Categories Summary Table', isHidden: false },
       ];
       setTableSettings(defaultSettings);
     });
@@ -190,6 +192,9 @@ export function useSettings() {
         { id: 'departments_action', name: 'departments_action', label: 'Departments Action Column', isHidden: false },
         { id: 'increment_record_action', name: 'increment_record_action', label: 'Increment Record Action Column', isHidden: false },
         { id: 'increment_deleted_action', name: 'increment_deleted_action', label: 'Increment Deleted Action Column', isHidden: false },
+        { id: 'taken_summary_action', name: 'taken_summary_action', label: 'Taken Summary Action Column', isHidden: false },
+        { id: 'categories_summary_action', name: 'categories_summary_action', label: 'Categories Summary Action Column', isHidden: false },
+        { id: 'loan_flow_action', name: 'loan_flow_action', label: 'Loan Flow Action Column', isHidden: false },
       ];
 
       const existingIds = new Set(data.map(s => s.id));
@@ -217,6 +222,9 @@ export function useSettings() {
         { id: 'departments_action', name: 'departments_action', label: 'Departments Action Column', isHidden: false },
         { id: 'increment_record_action', name: 'increment_record_action', label: 'Increment Record Action Column', isHidden: false },
         { id: 'increment_deleted_action', name: 'increment_deleted_action', label: 'Increment Deleted Action Column', isHidden: false },
+        { id: 'taken_summary_action', name: 'taken_summary_action', label: 'Taken Summary Action Column', isHidden: false },
+        { id: 'categories_summary_action', name: 'categories_summary_action', label: 'Categories Summary Action Column', isHidden: false },
+        { id: 'loan_flow_action', name: 'loan_flow_action', label: 'Loan Flow Action Column', isHidden: false },
       ];
       setActionSettings(defaultSettings);
       setLoading(false);

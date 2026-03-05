@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
+import { useSettings } from '@/hooks/useSettings';
 import { format, parseISO, startOfMonth, endOfMonth, isSameMonth, addMonths } from 'date-fns';
 import { 
   Search, 
@@ -48,6 +49,7 @@ interface CustomSettings {
 export default function LoanFlow() {
   const { user } = useAuth();
   const { transactions, loading } = useTransactions();
+  const { isActionHidden } = useSettings();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLoan, setSelectedLoan] = useState<{ category: string; department: string } | null>(null);
   const [certificateData, setCertificateData] = useState<any | null>(null);
@@ -406,46 +408,50 @@ export default function LoanFlow() {
           <table className="w-full text-sm text-left">
             <thead className="bg-slate-50 text-slate-600 font-medium border-b border-slate-200">
               <tr>
-                <th className="px-4 py-3">SL</th>
-                <th className="px-4 py-3">LoanType</th>
-                <th className="px-4 py-3 text-right">Loan Amount</th>
-                <th className="px-4 py-3 text-right">Paid Amount</th>
-                <th className="px-4 py-3 text-right">Due Amount</th>
-                <th className="px-4 py-3 text-right">Loan Lent</th>
-                <th className="px-4 py-3 text-right">P.loan Amount</th>
-                <th className="px-4 py-3 text-right">T.Paid Amount</th>
-                <th className="px-4 py-3 text-center">View Details</th>
+                <th className="px-4 py-1">SL</th>
+                <th className="px-4 py-1">LoanType</th>
+                <th className="px-4 py-1 text-right">Loan Amount</th>
+                <th className="px-4 py-1 text-right">Paid Amount</th>
+                <th className="px-4 py-1 text-right">Due Amount</th>
+                <th className="px-4 py-1 text-right">Loan Lent</th>
+                <th className="px-4 py-1 text-right">P.loan Amount</th>
+                <th className="px-4 py-1 text-right">T.Paid Amount</th>
+                {!isActionHidden('loan_flow_action') && (
+                  <th className="px-4 py-1 text-center">View Details</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loanData.map((row, index) => (
                 <tr key={row.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 text-slate-500">{index + 1}</td>
-                  <td className="px-4 py-3 font-medium text-slate-800">Bank Loan - {row.department}</td>
-                  <td className="px-4 py-3 text-right text-blue-600 font-medium">{row.loanAmount.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-green-600 font-medium">{row.paidAmount.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-orange-600 font-medium">{row.dueAmount.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-purple-600 font-medium">{row.loanLent.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-red-600 font-medium">{row.pLoanAmount.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 font-medium">{row.totalPaidAmount.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleViewDetails(row.department)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="View Details"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setCertificateData(row)}
-                        className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                        title="View Certificate"
-                      >
-                        <Award className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+                  <td className="px-4 py-1 text-slate-500">{index + 1}</td>
+                  <td className="px-4 py-1 font-medium text-slate-800">Bank Loan - {row.department}</td>
+                  <td className="px-4 py-1 text-right text-blue-600 font-medium">{row.loanAmount.toLocaleString()}</td>
+                  <td className="px-4 py-1 text-right text-green-600 font-medium">{row.paidAmount.toLocaleString()}</td>
+                  <td className="px-4 py-1 text-right text-orange-600 font-medium">{row.dueAmount.toLocaleString()}</td>
+                  <td className="px-4 py-1 text-right text-purple-600 font-medium">{row.loanLent.toLocaleString()}</td>
+                  <td className="px-4 py-1 text-right text-red-600 font-medium">{row.pLoanAmount.toLocaleString()}</td>
+                  <td className="px-4 py-1 text-right text-emerald-600 font-medium">{row.totalPaidAmount.toLocaleString()}</td>
+                  {!isActionHidden('loan_flow_action') && (
+                    <td className="px-4 py-1 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleViewDetails(row.department)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="View Details"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => setCertificateData(row)}
+                          className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                          title="View Certificate"
+                        >
+                          <Award className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
               {loanData.length === 0 && (
@@ -469,22 +475,24 @@ export default function LoanFlow() {
                 <span className="text-sm font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">#{index + 1}</span>
                 <h3 className="font-bold text-slate-800">Bank Loan - {row.department}</h3>
               </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handleViewDetails(row.department)}
-                  className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
-                  title="View Details"
-                >
-                  <Eye className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setCertificateData(row)}
-                  className="p-2 bg-purple-50 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
-                  title="View Certificate"
-                >
-                  <Award className="w-4 h-4" />
-                </button>
-              </div>
+              {!isActionHidden('loan_flow_action') && (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleViewDetails(row.department)}
+                    className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                    title="View Details"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setCertificateData(row)}
+                    className="p-2 bg-purple-50 text-purple-600 hover:bg-purple-100 rounded-lg transition-colors"
+                    title="View Certificate"
+                  >
+                    <Award className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
             
             <div className="grid grid-cols-3 gap-y-4 gap-x-2 text-sm">
@@ -587,12 +595,12 @@ export default function LoanFlow() {
                     <table className="w-full text-sm">
                       <thead className="bg-slate-50 text-slate-600 font-medium">
                         <tr>
-                          <th className="px-4 py-3 text-left w-16">SL</th>
-                          <th className="px-4 py-3 text-left w-40">Month</th>
-                          <th className="px-4 py-3 text-center w-32">Input 1</th>
-                          <th className="px-4 py-3 text-center w-40">Input 2 (Amount)</th>
-                          <th className="px-4 py-3 text-center w-32">Status</th>
-                          <th className="px-4 py-3 text-center w-16">Action</th>
+                          <th className="px-4 py-1 text-left w-16">SL</th>
+                          <th className="px-4 py-1 text-left w-40">Month</th>
+                          <th className="px-4 py-1 text-center w-32">Input 1</th>
+                          <th className="px-4 py-1 text-center w-40">Input 2 (Amount)</th>
+                          <th className="px-4 py-1 text-center w-32">Status</th>
+                          <th className="px-4 py-1 text-center w-16">Action</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">

@@ -42,8 +42,8 @@ export default function SettingsList({
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-200 sticky top-0 z-10">
               <tr>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">Name</th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">
+                <th className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase">Name</th>
+                <th className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase">
                   <div className="flex items-center gap-2">
                     Type
                     <select
@@ -58,7 +58,7 @@ export default function SettingsList({
                     </select>
                   </div>
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase">
+                <th className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase">
                   <div className="flex items-center gap-2">
                     Status
                     <select
@@ -72,14 +72,14 @@ export default function SettingsList({
                     </select>
                   </div>
                 </th>
-                {showActions && <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase text-center">Actions</th>}
+                {showActions && <th className="px-4 py-1 text-xs font-semibold text-slate-500 uppercase text-center">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredItems.map((item, index) => (
                 <tr key={`${item.id}-${index}`} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.name}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-1 text-sm font-medium text-slate-900">{item.name}</td>
+                  <td className="px-4 py-1">
                     <span className={cn(
                       "px-2 py-1 rounded-full text-xs font-medium capitalize",
                       item.type === 'income' ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
@@ -87,7 +87,7 @@ export default function SettingsList({
                       {item.type}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-1">
                     {item.hidden ? (
                       <span className="flex items-center text-slate-400 text-xs">
                         <EyeOff className="w-3 h-3 mr-1" /> Hidden
@@ -99,7 +99,7 @@ export default function SettingsList({
                     )}
                   </td>
                   {showActions && (
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-1">
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => onToggleVisibility(item.id!, !item.hidden)}
