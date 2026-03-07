@@ -18,6 +18,8 @@ import TMIEPDFFilter from '@/pages/DataSummary/TMIEPDFFilter';
 import UploadTransactions from '@/pages/MoreOption/UploadTransactions';
 import TakenSummary from '@/pages/DataSummary/TakenSummary';
 import CategoriesSummary from '@/pages/DataSummary/CategoriesSummary';
+import HaziparaPopulation from '@/pages/MoreOption/HaziparaPopulation';
+import HaziparaPopulationDownload from '@/pages/MoreOption/HaziparaPopulationDownload';
 
 import LoanFlow from '@/pages/DataSummary/LoanFlow';
 
@@ -185,6 +187,22 @@ export default function App() {
             <PrivateRoute>
               <DashboardLayout>
                 <UploadTransactions />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/hazipara-population" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <HaziparaPopulation />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/hazipara-population-download" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <HaziparaPopulationDownload />
               </DashboardLayout>
             </PrivateRoute>
           } />

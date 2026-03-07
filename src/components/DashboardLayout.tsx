@@ -16,7 +16,8 @@ import {
   CreditCard,
   Calculator,
   TrendingUp,
-  Upload
+  Upload,
+  User as UserIcon
 } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -284,6 +285,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   >
                     <Upload className="w-4 h-4 mr-2" />
                     Upload Transactions
+                  </Link>
+                  <Link
+                    to="/hazipara-population"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-l transition-colors",
+                      location.pathname === '/hazipara-population'
+                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <UserIcon className="w-4 h-4 mr-2" />
+                    Hazipara Population
                   </Link>
                 </div>
               )}

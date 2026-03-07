@@ -205,6 +205,7 @@ export function useSettings() {
       const defaultSettings: ButtonSetting[] = [
         { id: 'delete_all_transactions', name: 'delete_all_transactions', label: 'Transactions Delete All Button', isHidden: false },
         { id: 'delete_all_deleted_transactions', name: 'delete_all_deleted_transactions', label: 'Deleted Transactions Delete All Button', isHidden: false },
+        { id: 'delete_all_hazipara', name: 'delete_all_hazipara', label: 'Hazipara Population Delete All Button', isHidden: false },
         { id: 'dashboard_pdf', name: 'dashboard_pdf', label: 'Dashboard PDF Export Button', isHidden: false },
         { id: 'dashboard_excel', name: 'dashboard_excel', label: 'Dashboard Excel Export Button', isHidden: false },
       ];
@@ -229,6 +230,7 @@ export function useSettings() {
       const defaultSettings: ButtonSetting[] = [
         { id: 'delete_all_transactions', name: 'delete_all_transactions', label: 'Transactions Delete All Button', isHidden: false },
         { id: 'delete_all_deleted_transactions', name: 'delete_all_deleted_transactions', label: 'Deleted Transactions Delete All Button', isHidden: false },
+        { id: 'delete_all_hazipara', name: 'delete_all_hazipara', label: 'Hazipara Population Delete All Button', isHidden: false },
         { id: 'dashboard_pdf', name: 'dashboard_pdf', label: 'Dashboard PDF Export Button', isHidden: false },
         { id: 'dashboard_excel', name: 'dashboard_excel', label: 'Dashboard Excel Export Button', isHidden: false },
       ];

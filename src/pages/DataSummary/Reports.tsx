@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
 import { format, startOfYear, endOfYear, eachMonthOfInterval } from 'date-fns';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import html2pdf from 'html2pdf.js';
 import * as XLSX from 'xlsx';
 import { Download, Calendar } from 'lucide-react';
 
@@ -12,6 +11,7 @@ export default function Reports() {
   const { transactions, loading } = useTransactions();
   const { isTableHidden } = useSettings();
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const tableRef = useRef<HTMLTableElement>(null);
 
   if (loading) {
     return (
@@ -102,24 +102,18 @@ export default function Reports() {
 
   // Export Functions
   const exportPDF = () => {
-    const doc = new jsPDF();
-    doc.text('Financial Report', 14, 15);
+    const element = tableRef.current;
+    if (!element) return;
     
-    const tableData = transactions.map(t => [
-      format(new Date(t.date), 'yyyy-MM-dd'),
-      t.type,
-      t.category,
-      t.department,
-      t.amount.toString()
-    ]);
-
-    autoTable(doc, {
-      head: [['Date', 'Type', 'Category', 'Department', 'Amount']],
-      body: tableData,
-      startY: 20,
-    });
-
-    doc.save('financial-report.pdf');
+    const opt: any = {
+      margin: 1,
+      filename: 'financial-report.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save();
   };
 
   const exportExcel = () => {
@@ -293,7 +287,7 @@ export default function Reports() {
           {/* Monthly Summary Table */}
           {!isTableHidden('reports_monthly') && (
             <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200">
-              <table className="w-full min-w-[600px] text-left border-collapse">
+              <table ref={tableRef} className="w-full min-w-[600px] text-left border-collapse">
                 <thead>
                   <tr className="bg-blue-600 text-white">
                     <th className="px-4 py-2 text-sm font-bold">Month Name</th>
