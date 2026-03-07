@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getAnalytics, isSupported } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAPplby4kVfu0s7IPJXdS-xZlfi_m1nJpM",
-  authDomain: "money-managements-d8f54.firebaseapp.com",
-  projectId: "money-managements-d8f54",
-  storageBucket: "money-managements-d8f54.firebasestorage.app",
-  messagingSenderId: "246568918050",
-  appId: "1:246568918050:web:d0162d2ad335ef39557e7b",
-  measurementId: "G-8HLFQ95E3G"
+  apiKey: "AIzaSyBcaHXDUz7pM_QgOy4E9jk6R6LwCctXPuM",
+  authDomain: "salaryanalysis-247a1.firebaseapp.com",
+  projectId: "salaryanalysis-247a1",
+  storageBucket: "salaryanalysis-247a1.firebasestorage.app",
+  messagingSenderId: "549040846814",
+  appId: "1:549040846814:web:0771b2e86041407effcf4f",
+  measurementId: "G-PVSK2YMGSH"
 };
 
 // Initialize Firebase

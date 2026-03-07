@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDoc, setDoc, writeBatch } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Transaction } from '@/types';
 import { useAuth } from '@/context/AuthContext';
@@ -127,10 +127,20 @@ export function useTransactions() {
 
   const permanentlyDeleteAllTransactions = async () => {
     try {
-      const promises = deletedTransactions.map(t => 
-        t.id ? deleteDoc(doc(db, 'deleted_transactions', t.id)) : Promise.resolve()
-      );
-      await Promise.all(promises);
+      // Reduce batch size and increase delay to be more conservative
+      const CHUNK_SIZE = 100; 
+      for (let i = 0; i < deletedTransactions.length; i += CHUNK_SIZE) {
+        const chunk = deletedTransactions.slice(i, i + CHUNK_SIZE);
+        const batch = writeBatch(db);
+        chunk.forEach(t => {
+          if (t.id) {
+            batch.delete(doc(db, 'deleted_transactions', t.id));
+          }
+        });
+        await batch.commit();
+        // Increase delay to 2 seconds
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      }
     } catch (error) {
       console.error("Error permanently deleting all transactions:", error);
       throw error;

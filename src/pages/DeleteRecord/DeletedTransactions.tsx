@@ -67,12 +67,17 @@ export default function DeletedTransactions() {
     }
   };
 
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
+
   const handlePermanentDeleteAll = async () => {
+    setIsDeletingAll(true);
     try {
       await permanentlyDeleteAllTransactions();
       setIsDeleteAllModalOpen(false);
     } catch (error) {
       alert('সব লেনদেন মুছতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+    } finally {
+      setIsDeletingAll(false);
     }
   };
 
@@ -284,9 +289,10 @@ export default function DeletedTransactions() {
                 </button>
                 <button
                   onClick={handlePermanentDeleteAll}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+                  disabled={isDeletingAll}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  সব মুছুন
+                  {isDeletingAll ? `${deletedTransactions.length} টি মুছে ফেলা হচ্ছে...` : 'সব মুছুন'}
                 </button>
               </div>
             </div>
