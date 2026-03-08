@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="h-16 flex items-center px-4 border-b border-slate-200">
             <Link to="/" className="flex items-center">
               <Wallet className="w-8 h-8 text-blue-600 mr-2" />
-              <span className="text-xl font-bold text-slate-800">FinDash</span>
+              <span className="text-xl font-bold text-slate-800">Salary Analytics</span>
             </Link>
           </div>
 
@@ -232,6 +232,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               
               {isMoreOptionsOpen && (
                 <div className="mt-1 ml-4 border-l border-slate-100 space-y-1">
+                  <Link
+                    to="/formula-manage"
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-l transition-colors",
+                      location.pathname === '/formula-manage'
+                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <Calculator className="w-4 h-4 mr-2" />
+                    Formula Manage
+                  </Link>
                   <Link
                     to="/calculation"
                     onClick={() => setIsSidebarOpen(false)}

@@ -139,8 +139,8 @@ export default function HaziparaPopulation() {
   const col3 = data.slice(colSize * 2);
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="flex gap-6 mb-6 border-b border-slate-200 overflow-x-auto whitespace-nowrap">
+    <div className="p-2 bg-white rounded-xl shadow-sm border border-slate-200">
+      <div className="flex gap-3 mb-3 border-b border-slate-200 overflow-x-auto whitespace-nowrap">
         <button 
           onClick={() => setActiveTab('population')} 
           className={`flex-shrink-0 flex items-center gap-2 px-4 py-3 font-medium transition-colors ${activeTab === 'population' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -287,7 +287,7 @@ export default function HaziparaPopulation() {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50">
-          <div className="bg-white p-6 rounded-xl w-full max-w-md shadow-xl border border-slate-200">
+          <div className="bg-white p-3 rounded-xl w-full max-w-md shadow-xl border border-slate-200">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold">{editingId ? 'Edit Record' : 'Add Record'}</h3>
               <button onClick={() => setIsModalOpen(false)}><X className="w-6 h-6" /></button>
@@ -301,7 +301,7 @@ export default function HaziparaPopulation() {
 
       {itemToDelete && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50">
-          <div className="bg-white p-6 rounded-xl w-full max-w-sm shadow-xl border border-slate-200">
+          <div className="bg-white p-3 rounded-xl w-full max-w-sm shadow-xl border border-slate-200">
             <h3 className="text-lg font-bold mb-4">Are you sure?</h3>
             <p className="text-slate-600 mb-6">Do you really want to delete the record for <strong>{itemToDelete.name}</strong>? This action cannot be undone.</p>
             <div className="flex gap-4">

@@ -8,11 +8,12 @@ import TransactionForm from '@/components/TransactionForm';
 import TMIEPDFFilter from '@/pages/DataSummary/TMIEPDFFilter';
 import Calculation from '@/pages/MoreOption/Calculation';
 import ProjectList from './ProjectList';
+import Formula from '@/pages/Formula/Formula';
 
 export default function LandingPage() {
   const { user } = useAuth();
   const { isLandingHidden, loading } = useSettings();
-  const [activeView, setActiveView] = useState<'transaction' | 'filter' | 'calculation' | 'project'>('transaction');
+  const [activeView, setActiveView] = useState<'transaction' | 'filter' | 'calculation' | 'project' | 'formula'>('transaction');
 
   const renderContent = () => {
     // Check if current view is hidden
@@ -21,6 +22,7 @@ export default function LandingPage() {
     if (activeView === 'filter' && isLandingHidden('landing_filter')) isHidden = true;
     if (activeView === 'calculation' && isLandingHidden('landing_calculation')) isHidden = true;
     if (activeView === 'project' && isLandingHidden('landing_project')) isHidden = true;
+    if (activeView === 'formula' && isLandingHidden('landing_formula')) isHidden = true;
 
     if (isHidden) {
       return (
@@ -65,6 +67,10 @@ export default function LandingPage() {
 
     if (activeView === 'project') {
       return <ProjectList />;
+    }
+    
+    if (activeView === 'formula') {
+      return <Formula />;
     }
     
     return null;

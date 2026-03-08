@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Wallet, LogIn, User } from 'lucide-react';
+import { Wallet, LogIn, User, Home, Filter, Calculator, Folder } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 interface PublicHeaderProps {
-  onNavClick?: (view: 'transaction' | 'filter' | 'calculation' | 'project') => void;
+  onNavClick?: (view: 'transaction' | 'filter' | 'calculation' | 'project' | 'formula') => void;
 }
 
 export default function PublicHeader({ onNavClick }: PublicHeaderProps) {
@@ -32,33 +32,44 @@ export default function PublicHeader({ onNavClick }: PublicHeaderProps) {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <Wallet className="w-8 h-8 text-blue-600" />
-          <span className="text-xl font-bold text-slate-900">FinDash</span>
+          <span className="text-xl font-bold text-slate-900">Salary Analytics</span>
         </Link>
         
         <nav className="hidden md:flex items-center gap-8">
           <button 
             onClick={() => onNavClick && onNavClick('transaction')} 
-            className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
           >
+            <Home className="w-4 h-4" />
             Home
           </button>
           <button 
             onClick={() => onNavClick && onNavClick('filter')} 
-            className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
           >
+            <Filter className="w-4 h-4" />
             Filter
           </button>
           <button 
             onClick={() => onNavClick && onNavClick('calculation')} 
-            className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
           >
+            <Calculator className="w-4 h-4" />
             Calculation
           </button>
           <button 
             onClick={() => onNavClick && onNavClick('project')} 
-            className="text-slate-600 hover:text-blue-600 font-medium transition-colors"
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
           >
+            <Folder className="w-4 h-4" />
             Project
+          </button>
+          <button 
+            onClick={() => onNavClick && onNavClick('formula')} 
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 font-medium transition-colors"
+          >
+            <Calculator className="w-4 h-4" />
+            Formula
           </button>
         </nav>
 

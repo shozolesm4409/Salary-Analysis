@@ -24,6 +24,8 @@ import HaziparaPopulationDownload from '@/pages/MoreOption/HaziparaPopulationDow
 import LoanFlow from '@/pages/DataSummary/LoanFlow';
 
 import ProjectManage from '@/pages/MoreOption/ProjectManage';
+import FormulaManage from '@/pages/MoreOption/FormulaManage';
+import Formula from '@/pages/Formula/Formula';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -171,6 +173,14 @@ export default function App() {
             <PrivateRoute>
               <DashboardLayout>
                 <IncrementRecordPage />
+              </DashboardLayout>
+            </PrivateRoute>
+          } />
+
+          <Route path="/formula-manage" element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <FormulaManage />
               </DashboardLayout>
             </PrivateRoute>
           } />
