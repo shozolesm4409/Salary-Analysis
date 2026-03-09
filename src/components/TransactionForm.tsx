@@ -49,6 +49,15 @@ export default function TransactionForm({ onClose, initialData, isInline = false
         await updateTransaction(initialData.id, transactionData);
       } else {
         await addTransaction(transactionData);
+        // Reset form for new transactions
+        setFormData({
+          date: format(new Date(), 'yyyy-MM-dd'),
+          amount: '',
+          category: '',
+          department: '',
+          description: '',
+        });
+        setType('income');
       }
       onClose();
     } catch (error) {

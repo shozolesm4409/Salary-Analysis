@@ -37,3 +37,18 @@ export interface Project {
   isVisible: boolean;
   timestamp: number;
 }
+
+export interface ProfitRecord {
+  id?: string;
+  year: string;
+  months: number;
+  present: number;
+  ebfAmount: number;
+  totalAmount: number;
+  yearAmount: number;
+  ebfAmounts: number;
+  m: number;
+  done: boolean;
+  remark?: string;
+  timestamp: number;
+}

@@ -230,6 +230,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <CreditCard className="w-4 h-4 mr-2" />
                     Loan Flow
                   </Link>
+                  <Link
+                    to="/other-management"
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      location.pathname === '/other-management'
+                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    )}
+                  >
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Other Management
+                  </Link>
                 </div>
               )}
             </div>

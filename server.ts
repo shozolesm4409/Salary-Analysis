@@ -30,7 +30,7 @@ async function startServer() {
         const html = await vite.transformIndexHtml(req.originalUrl, template);
         res.status(200).set({ "Content-Type": "text/html" }).end(html);
       } catch (e) {
-        vite.ssrFixStackTrace(e as Error);
+        vite.ssrFixStacktrace(e as Error);
         next(e);
       }
     });
