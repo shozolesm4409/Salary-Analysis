@@ -70,7 +70,7 @@ export default function Expenses({ stats, allMonths, groupedData, categories, sh
                   <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
                   <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">ExpenseTypeDetails</th>
                   {allMonths.map(month => (
-                    <th key={month} className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[100px]">
+                    <th key={month} className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[60px]">
                       {format(new Date(month + '-01'), 'MMM-yy')}
                     </th>
                   ))}
