@@ -230,19 +230,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <CreditCard className="w-4 h-4 mr-2" />
                     Loan Flow
                   </Link>
-                  <Link
-                    to="/other-management"
-                    onClick={() => setIsMobileSidebarOpen(false)}
-                    className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
-                      location.pathname === '/other-management'
-                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                    )}
-                  >
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Other Management
-                  </Link>
                 </div>
               )}
             </div>
@@ -268,17 +255,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {isSidebarOpen && isMoreOptionsOpen && (
                 <div className="mt-1 ml-4 border-l border-slate-100 space-y-1">
                   <Link
-                    to="/formula-manage"
+                    to="/other-management"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
                       "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
-                      location.pathname === '/formula-manage'
+                      location.pathname === '/other-management'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                     )}
                   >
-                    <Calculator className="w-4 h-4 mr-2" />
-                    Formula Manage
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Other Management
                   </Link>
                   <Link
                     to="/calculation"
@@ -308,19 +295,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       Increment Record
                     </Link>
                   )}
-                  <Link
-                    to="/project-manage"
-                    onClick={() => setIsMobileSidebarOpen(false)}
-                    className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
-                      location.pathname === '/project-manage'
-                        ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                    )}
-                  >
-                    <FileText className="w-4 h-4 mr-2" />
-                    Project Manage
-                  </Link>
                   <Link
                     to="/upload-transactions"
                     onClick={() => setIsMobileSidebarOpen(false)}
@@ -380,7 +354,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-4">
             <Link to="/edit-profile" className="flex items-center hover:bg-slate-50 p-1 rounded-xl transition-colors">
               <div className="text-right mr-3 hidden sm:block">
-                <p className="text-sm font-medium text-slate-700">{userProfile?.displayName || user?.displayName || user?.email}</p>
+                <p className="text-sm font-medium text-slate-700">{userProfile?.displayName || user?.displayName || 'Full Name'}</p>
                 <p className="text-xs text-slate-500">Administrator</p>
               </div>
               {userProfile?.photoBase64 ? (
@@ -398,7 +372,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 />
               ) : (
                 <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
-                  {(userProfile?.displayName || user?.displayName || user?.email)?.charAt(0).toUpperCase()}
+                  {(userProfile?.displayName || user?.displayName || 'Full Name')?.charAt(0).toUpperCase()}
                 </div>
               )}
             </Link>

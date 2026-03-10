@@ -67,10 +67,10 @@ export default function Expenses({ stats, allMonths, groupedData, categories, sh
             <table className="w-full text-left border-collapse">
               <thead className="sticky top-0 z-20 bg-slate-50">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">ExpenseTypeDetails</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">ExpenseTypeDetails</th>
                   {allMonths.map(month => (
-                    <th key={month} className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[100px]">
+                    <th key={month} className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[100px]">
                       {format(new Date(month + '-01'), 'MMM-yy')}
                     </th>
                   ))}
@@ -79,12 +79,12 @@ export default function Expenses({ stats, allMonths, groupedData, categories, sh
               <tbody className="divide-y divide-slate-100">
                 {categories.map((cat, idx) => (
                   <tr key={cat} className="hover:bg-blue-50/50 transition-colors">
-                    <td className="px-4 py-3 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
-                    <td className="px-4 py-3 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
+                    <td className="px-2 py-1 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
+                    <td className="px-2 py-1 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
                     {allMonths.map(month => {
                       const amount = groupedData[cat]?.[month];
                       return (
-                        <td key={month} className="px-4 py-3 text-sm font-medium text-slate-600 border border-slate-100 text-right">
+                        <td key={month} className="px-2 py-1 text-sm font-medium text-slate-600 border border-slate-100 text-right">
                           {amount ? amount.toLocaleString() : ''}
                         </td>
                       );

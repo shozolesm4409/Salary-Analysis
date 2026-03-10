@@ -10,9 +10,10 @@ interface TransactionFormProps {
   onClose: () => void;
   initialData?: Transaction;
   isInline?: boolean;
+  isTypeUnlocked?: boolean;
 }
 
-export default function TransactionForm({ onClose, initialData, isInline = false }: TransactionFormProps) {
+export default function TransactionForm({ onClose, initialData, isInline = false, isTypeUnlocked = false }: TransactionFormProps) {
   const { transactions, addTransaction, updateTransaction } = useTransactions();
   const { categories: allCategories, departments: allDepartments } = useSettings();
   const [loading, setLoading] = useState(false);
@@ -145,25 +146,25 @@ export default function TransactionForm({ onClose, initialData, isInline = false
         <div className="grid grid-cols-2 gap-4 p-1 bg-slate-100 rounded-lg">
           <button
             type="button"
-            disabled={!!initialData}
+            disabled={!!initialData && !isTypeUnlocked}
             onClick={() => { setType('income'); setFormData({ ...formData, category: '', department: '' }); }}
             className={`py-2 text-sm font-medium rounded-md transition-all ${
               type === 'income' 
                 ? 'bg-white text-emerald-600 shadow-sm' 
                 : 'text-slate-500 hover:text-slate-700'
-            } ${initialData ? 'opacity-70 cursor-not-allowed' : ''}`}
+            } ${initialData && !isTypeUnlocked ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             Income
           </button>
           <button
             type="button"
-            disabled={!!initialData}
+            disabled={!!initialData && !isTypeUnlocked}
             onClick={() => { setType('expense'); setFormData({ ...formData, category: '', department: '' }); }}
             className={`py-2 text-sm font-medium rounded-md transition-all ${
               type === 'expense' 
                 ? 'bg-white text-red-600 shadow-sm' 
                 : 'text-slate-500 hover:text-slate-700'
-            } ${initialData ? 'opacity-70 cursor-not-allowed' : ''}`}
+            } ${initialData && !isTypeUnlocked ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             Expense
           </button>

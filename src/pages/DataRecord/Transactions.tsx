@@ -29,6 +29,7 @@ export default function Transactions() {
   const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | undefined>(undefined);
+  const [isTypeUnlocked, setIsTypeUnlocked] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -51,10 +52,24 @@ export default function Transactions() {
 
   // Filtering Logic
   const filteredTransactions = transactions.filter(t => {
-    const matchesSearch = 
-      t.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase().trim();
+    if (!searchLower) return (
+      (filterType === 'all' || t.type === filterType) &&
+      (filterCategory === 'all' || t.category === filterCategory) &&
+      (filterYear === 'all' || t.month.startsWith(filterYear)) &&
+      (filterMonth === 'all' || t.month === filterMonth)
+    );
+
+    const searchWords = searchLower.split(/[,\s]+/).filter(word => word.length > 0);
+    
+    const matchesSearch = searchWords.every(word => 
+      t.category.toLowerCase().includes(word) ||
+      t.department.toLowerCase().includes(word) ||
+      t.description?.toLowerCase().includes(word) ||
+      t.type.toLowerCase().includes(word) ||
+      t.amount.toString().includes(word) ||
+      format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word)
+    );
     
     const matchesType = filterType === 'all' || t.type === filterType;
     const matchesCategory = filterCategory === 'all' || t.category === filterCategory;
@@ -122,9 +137,20 @@ export default function Transactions() {
         </div>
       )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Transactions</h1>
-          <p className="text-slate-500">Manage your income and expenses</p>
+        <div className="flex items-center gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-slate-900">Transactions</h1>
+              <input 
+                type="checkbox" 
+                checked={isTypeUnlocked}
+                onChange={(e) => setIsTypeUnlocked(e.target.checked)}
+                className="w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                title="Unlock Income/Expense type in edit mode"
+              />
+            </div>
+            <p className="text-slate-500">Manage your income and expenses</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {!isButtonHidden('delete_all_transactions') && transactions.length > 0 && (
@@ -339,6 +365,7 @@ export default function Transactions() {
         <TransactionForm 
           onClose={() => setIsFormOpen(false)} 
           initialData={editingTransaction}
+          isTypeUnlocked={isTypeUnlocked}
         />
       )}
 

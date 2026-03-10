@@ -93,6 +93,14 @@ export default function TakenSummary() {
   const currentData = activeTab === 'taken_given' ? takenGivenData : lendGiveBackData;
   const selectedRow = currentData.find(r => r.department === selectedDepartment);
 
+  const totalTaken = takenGivenData.reduce((sum, row) => sum + row.amount1, 0);
+  const totalGiven = takenGivenData.reduce((sum, row) => sum + row.amount2, 0);
+  const totalTakenDue = takenGivenData.reduce((sum, row) => sum + row.due, 0);
+
+  const totalLend = lendGiveBackData.reduce((sum, row) => sum + row.amount1, 0);
+  const totalGiveBack = lendGiveBackData.reduce((sum, row) => sum + row.amount2, 0);
+  const totalLendDue = lendGiveBackData.reduce((sum, row) => sum + row.due, 0);
+
   const handleViewDetails = (department: string) => {
     setSelectedDepartment(department);
     setIsModalOpen(true);
@@ -129,6 +137,45 @@ export default function TakenSummary() {
           <h1 className="text-2xl font-bold text-slate-900">Taken Summary</h1>
           <p className="text-slate-500">Manage Taken/Given and Lend/Give Back records</p>
         </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-3 gap-4">
+        {activeTab === 'taken_given' ? (
+          <>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Total Taken</p>
+              <p className="text-xl font-bold text-emerald-600">{totalTaken.toLocaleString()}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Total Given</p>
+              <p className="text-xl font-bold text-blue-600">{totalGiven.toLocaleString()}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Taken Due</p>
+              <p className={`text-xl font-bold ${totalTakenDue > 0 ? 'text-red-600' : totalTakenDue < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
+                {totalTakenDue.toLocaleString()}
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Total Lend</p>
+              <p className="text-xl font-bold text-emerald-600">{totalLend.toLocaleString()}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Total Give Back</p>
+              <p className="text-xl font-bold text-blue-600">{totalGiveBack.toLocaleString()}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+              <p className="text-sm font-medium text-slate-500 mb-1">Lend Due</p>
+              <p className={`text-xl font-bold ${totalLendDue > 0 ? 'text-red-600' : totalLendDue < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
+                {totalLendDue.toLocaleString()}
+              </p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Tabs */}

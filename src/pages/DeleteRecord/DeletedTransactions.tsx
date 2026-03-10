@@ -31,10 +31,19 @@ export default function DeletedTransactions() {
   const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
 
   const filteredTransactions = deletedTransactions.filter(t => {
-    const matchesSearch = 
-      t.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      t.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase().trim();
+    if (!searchLower) return true;
+
+    const searchWords = searchLower.split(/[,\s]+/).filter(word => word.length > 0);
+    
+    const matchesSearch = searchWords.every(word => 
+      t.category.toLowerCase().includes(word) ||
+      t.department.toLowerCase().includes(word) ||
+      t.description?.toLowerCase().includes(word) ||
+      t.type.toLowerCase().includes(word) ||
+      t.amount.toString().includes(word) ||
+      format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word)
+    );
     return matchesSearch;
   });
 

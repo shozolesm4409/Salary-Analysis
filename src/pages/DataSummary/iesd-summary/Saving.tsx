@@ -150,13 +150,15 @@ export default function Saving({
     <div className="space-y-4">
       <div className="flex justify-center items-center gap-2 mb-2">
         <h2 className="text-2xl font-bold text-blue-600">Saving Overview</h2>
-        <button 
-          onClick={() => setIsManageOpen(true)}
-          className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
-          title="Profit Manage"
-        >
-          <Settings className="w-5 h-5" />
-        </button>
+        {!isTableHidden('profit_manage') && (
+          <button 
+            onClick={() => setIsManageOpen(true)}
+            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all"
+            title="Profit Manage"
+          >
+            <Settings className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -238,10 +240,10 @@ export default function Saving({
             <table className="w-full text-left border-collapse">
               <thead className="sticky top-0 z-20 bg-slate-50">
                 <tr>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">Saving Type</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">Saving Type</th>
                   {allMonths.map(month => (
-                    <th key={month} className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[100px]">
+                    <th key={month} className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[100px]">
                       {format(new Date(month + '-01'), 'MMM-yy')}
                     </th>
                   ))}
@@ -250,12 +252,12 @@ export default function Saving({
               <tbody className="divide-y divide-slate-100">
                 {categories.map((cat, idx) => (
                   <tr key={cat} className="hover:bg-blue-50/50 transition-colors">
-                    <td className="px-4 py-3 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
-                    <td className="px-4 py-3 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
+                    <td className="px-2 py-1 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
+                    <td className="px-2 py-1 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
                     {allMonths.map(month => {
                       const amount = groupedData[cat]?.[month];
                       return (
-                        <td key={month} className="px-4 py-3 text-sm font-medium text-slate-600 border border-slate-100 text-right">
+                        <td key={month} className="px-2 py-1 text-sm font-medium text-slate-600 border border-slate-100 text-right">
                           {amount ? amount.toLocaleString() : ''}
                         </td>
                       );
@@ -263,12 +265,12 @@ export default function Saving({
                   </tr>
                 ))}
                 <tr className="bg-slate-50 font-black">
-                  <td className="px-4 py-3 text-sm border border-slate-200 text-center">{categories.length + 1}</td>
-                  <td className="px-4 py-3 text-sm border border-slate-200">Total</td>
+                  <td className="px-2 py-1 text-sm border border-slate-200 text-center">{categories.length + 1}</td>
+                  <td className="px-2 py-1 text-sm border border-slate-200">Total</td>
                   {allMonths.map(month => {
                     const total = categories.reduce((sum, cat) => sum + (groupedData[cat]?.[month] || 0), 0);
                     return (
-                      <td key={month} className="px-4 py-3 text-sm border border-slate-200 text-right">
+                      <td key={month} className="px-2 py-1 text-sm border border-slate-200 text-right">
                         {total > 0 ? total.toLocaleString() : ''}
                       </td>
                     );
@@ -288,16 +290,16 @@ export default function Saving({
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50">
                 <tr className="bg-slate-100">
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200">Year</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Month</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Present</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBFAmount</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">T.Amount</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">Year Amount</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBFAmounts</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Month</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Done</th>
-                  <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200">Remark</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200">Year</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Month</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Present</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBFAmount</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">T.Amount</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">Year Amount</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBFAmounts</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Month</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Done</th>
+                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200">Remark</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -309,24 +311,24 @@ export default function Saving({
                   
                   return (
                     <tr key={row.id || idx} className="hover:bg-slate-50">
-                      <td className="px-4 py-3 text-sm font-bold border border-slate-100">{row.year}</td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-center">{autoMonth}</td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-center">
+                      <td className="px-2 py-1 text-sm font-bold border border-slate-100">{row.year}</td>
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">{autoMonth}</td>
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">
                         {row.present}{row.present > 1 ? '%' : ''}
                       </td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-right font-medium text-slate-900">
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-right font-medium text-slate-900">
                         {calculatedEbfAmount > 0 ? Math.round(calculatedEbfAmount).toLocaleString() : ''}
                       </td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-right font-medium text-slate-900">
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-right font-medium text-slate-900">
                         {calculatedTotalAmount > 0 ? Math.round(calculatedTotalAmount).toLocaleString() : ''}
                       </td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-right">{row.yearAmount > 0 ? row.yearAmount.toLocaleString() : ''}</td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-right">{row.ebfAmounts > 0 ? row.ebfAmounts.toLocaleString() : ''}</td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-center">{row.m > 0 ? row.m : ''}</td>
-                      <td className="px-4 py-3 text-sm border border-slate-100 text-center">
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-right">{row.yearAmount > 0 ? row.yearAmount.toLocaleString() : ''}</td>
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-right">{row.ebfAmounts > 0 ? row.ebfAmounts.toLocaleString() : ''}</td>
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">{row.m > 0 ? row.m : ''}</td>
+                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">
                         <input type="checkbox" checked={row.done} readOnly className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
                       </td>
-                      <td className="px-4 py-3 text-sm border border-slate-100">
+                      <td className="px-2 py-1 text-sm border border-slate-100">
                         {row.done ? (
                           <span className="text-emerald-600 flex items-center font-bold">😊 সম্পন্ন হয়েছে!</span>
                         ) : (
@@ -415,7 +417,7 @@ export default function Saving({
       )}
 
       {/* Profit Manage Popup */}
-      {isManageOpen && (
+      {isManageOpen && !isTableHidden('profit_manage') && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
             <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
@@ -549,13 +551,13 @@ export default function Saving({
                   <table className="w-full text-left border-collapse">
                     <thead className="bg-slate-50">
                       <tr>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200">Year</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Months</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Present</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBF Amount</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">Total Amount</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Done</th>
-                        <th className="px-4 py-3 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Actions</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200">Year</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Months</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Present</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">EBF Amount</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-right">Total Amount</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Done</th>
+                        <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -574,25 +576,25 @@ export default function Saving({
 
                           return (
                             <tr key={record.id} className="hover:bg-slate-50 transition-colors">
-                              <td className="px-4 py-3 text-sm font-bold border border-slate-100">{record.year}</td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-center">{autoMonth}</td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-center">
+                              <td className="px-2 py-1 text-sm font-bold border border-slate-100">{record.year}</td>
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-center">{autoMonth}</td>
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-center">
                                 {record.present}{record.present > 1 ? '%' : ''}
                               </td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-right font-medium">
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-right font-medium">
                                 {calculatedEbfAmount > 0 ? Math.round(calculatedEbfAmount).toLocaleString() : ''}
                               </td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-right font-medium">
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-right font-medium">
                                 {calculatedTotalAmount > 0 ? Math.round(calculatedTotalAmount).toLocaleString() : ''}
                               </td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-center">
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-center">
                                 {record.done ? (
                                   <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
                                 ) : (
                                   <AlertCircle className="w-5 h-5 text-amber-500 mx-auto" />
                                 )}
                               </td>
-                              <td className="px-4 py-3 text-sm border border-slate-100 text-center">
+                              <td className="px-2 py-1 text-sm border border-slate-100 text-center">
                                 <div className="flex justify-center space-x-2">
                                   <button
                                     onClick={() => handleEdit(record)}

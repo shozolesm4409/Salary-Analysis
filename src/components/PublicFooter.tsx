@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Filter, Calculator, Folder } from 'lucide-react';
+import { Home, Filter, Calculator, Folder, FunctionSquare } from 'lucide-react';
 
 interface PublicFooterProps {
   onNavClick?: (view: 'transaction' | 'filter' | 'calculation' | 'project' | 'formula') => void;
@@ -47,7 +47,7 @@ export default function PublicFooter({ onNavClick }: PublicFooterProps) {
               onClick={() => onNavClick && onNavClick('formula')} 
               className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
             >
-              <Calculator className="w-4 h-4" />
+              <FunctionSquare className="w-4 h-4" />
               Formula
             </button>
           </nav>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
-import { ArrowRight, Filter, Calculator, AlertCircle, Briefcase } from 'lucide-react';
+import { ArrowRight, Filter, Calculator, AlertCircle, Briefcase, FunctionSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useSettings } from '@/hooks/useSettings';
 import TransactionForm from '@/components/TransactionForm';
@@ -129,6 +129,14 @@ export default function LandingPage() {
           >
             <Briefcase className="w-5 h-5" />
             <span className="text-[10px] font-medium">Project</span>
+          </button>
+
+          <button 
+            onClick={() => setActiveView('formula')}
+            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'formula' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
+          >
+            <FunctionSquare className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Formula</span>
           </button>
         </div>
       </div>

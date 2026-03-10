@@ -24,7 +24,7 @@ export default function PublicHeader({ onNavClick }: PublicHeaderProps) {
     }
   }, [user]);
 
-  const displayName = userProfile?.displayName || user?.displayName || user?.email?.split('@')[0] || 'User';
+  const displayName = userProfile?.displayName || user?.displayName || 'Full Name';
   const photoUrl = userProfile?.photoBase64 || user?.photoURL;
 
   return (
