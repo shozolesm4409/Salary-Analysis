@@ -202,15 +202,15 @@ export default function IncrementRecordPage() {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-white uppercase bg-blue-600 sticky top-0 z-10">
                 <tr>
-                  <th className="px-6 py-3 text-center">SL</th>
-                  <th className="px-6 py-3 text-center">Timestamp</th>
-                  <th className="px-6 py-3 text-center">Year</th>
-                  <th className="px-6 py-3 text-center">Amount</th>
-                  <th className="px-6 py-3 text-center">Start Date</th>
-                  <th className="px-6 py-3 text-center">End Date</th>
-                  <th className="px-6 py-3 text-center">Status</th>
-                  <th className="px-6 py-3 text-center">Remark</th>
-                  {isActionVisible && <th className="px-6 py-3 text-center">Action</th>}
+                  <th className="px-3 py-1.5 text-center">SL</th>
+                  <th className="px-3 py-1.5 text-center">Timestamp</th>
+                  <th className="px-3 py-1.5 text-center">Year</th>
+                  <th className="px-3 py-1.5 text-center">Amount</th>
+                  <th className="px-3 py-1.5 text-center">Start Date</th>
+                  <th className="px-3 py-1.5 text-center">End Date</th>
+                  <th className="px-3 py-1.5 text-center">Status</th>
+                  <th className="px-3 py-1.5 text-center">Remark</th>
+                  {isActionVisible && <th className="px-3 py-1.5 text-center">Action</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
@@ -223,22 +223,22 @@ export default function IncrementRecordPage() {
                 ) : (
                   records.map((row) => (
                     <tr key={row.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 text-center font-medium text-slate-900">{row.sl}</td>
-                      <td className="px-6 py-4 text-center text-slate-600">
+                      <td className="px-2 py-1 text-center font-medium text-slate-900">{row.sl}</td>
+                      <td className="px-2 py-1 text-center text-slate-600">
                         {row.timestamp?.seconds ? new Date(row.timestamp.seconds * 1000).toLocaleString() : '-'}
                       </td>
-                      <td className="px-6 py-4 text-center text-slate-600">{row.year}</td>
-                      <td className="px-6 py-4 text-center text-slate-600">{row.amount}</td>
-                      <td className="px-6 py-4 text-center text-slate-600">{row.startDate}</td>
-                      <td className="px-6 py-4 text-center text-slate-600">{row.endDate}</td>
-                      <td className="px-6 py-4 text-center">
+                      <td className="px-2 py-1 text-center text-slate-600">{row.year}</td>
+                      <td className="px-2 py-1 text-center text-slate-600">{row.amount}</td>
+                      <td className="px-2 py-1 text-center text-slate-600">{row.startDate}</td>
+                      <td className="px-2 py-1 text-center text-slate-600">{row.endDate}</td>
+                      <td className="px-2 py-1 text-center">
                         <span className={cn("px-2.5 py-0.5 rounded text-xs font-medium", getStatusBadgeClass(row.status))}>
                           {row.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-center text-slate-600">{row.remark || '-'}</td>
+                      <td className="px-2 py-1 text-center text-slate-600">{row.remark || '-'}</td>
                       {isActionVisible && (
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-2 py-1 text-center">
                           <div className="flex items-center justify-center gap-3">
                             <button 
                               onClick={() => handleOpenModal(row)}
@@ -276,10 +276,10 @@ export default function IncrementRecordPage() {
               <table className="w-full text-sm">
                 <thead className="text-xs text-white uppercase bg-blue-600 sticky top-0 z-10">
                   <tr>
-                    <th className="px-4 py-3 text-center">SL</th>
-                    <th className="px-4 py-3 text-center">Year</th>
-                    <th className="px-4 py-3 text-center">Status</th>
-                    <th className="px-4 py-3 text-center">Atn</th>
+                    <th className="px-2 py-1 text-center">SL</th>
+                    <th className="px-2 py-1 text-center">Year</th>
+                    <th className="px-2 py-1 text-center">Status</th>
+                    <th className="px-2 py-1 text-center">Atn</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 bg-white">
@@ -293,14 +293,14 @@ export default function IncrementRecordPage() {
                     records.map((row) => (
                       <React.Fragment key={row.id}>
                         <tr className="bg-white">
-                          <td className="px-4 py-3 text-center font-medium text-slate-900">{row.sl}</td>
-                          <td className="px-4 py-3 text-center text-slate-600">{row.year}</td>
-                          <td className="px-4 py-3 text-center">
+                          <td className="px-2 py-1 text-center font-medium text-slate-900">{row.sl}</td>
+                          <td className="px-2 py-1 text-center text-slate-600">{row.year}</td>
+                          <td className="px-2 py-1 text-center">
                             <span className={cn("px-2 py-0.5 rounded text-[10px] font-medium", getStatusBadgeClass(row.status))}>
                               {row.status}
                             </span>
                           </td>
-                          <td className="px-4 py-3 text-center">
+                          <td className="px-2 py-1 text-center">
                             <button 
                               onClick={() => toggleRow(row.id)}
                               className="text-blue-600 p-1"
@@ -372,7 +372,7 @@ export default function IncrementRecordPage() {
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl w-full max-w-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-blue-600 px-6 py-4 flex justify-between items-center">
+            <div className="bg-blue-600 px-2 py-1 flex justify-between items-center">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">
                 {currentRecord ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
                 {currentRecord ? 'Edit Record' : 'Add New Record'}
@@ -476,7 +476,7 @@ export default function IncrementRecordPage() {
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl w-full max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="bg-red-600 px-6 py-4 flex items-center gap-2 text-white">
+            <div className="bg-red-600 px-2 py-1 flex items-center gap-2 text-white">
               <AlertTriangle className="w-5 h-5" />
               <h3 className="text-lg font-bold">Confirm Delete</h3>
             </div>

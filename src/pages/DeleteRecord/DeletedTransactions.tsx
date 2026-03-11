@@ -99,7 +99,7 @@ export default function DeletedTransactions() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
           <div className="flex items-center">

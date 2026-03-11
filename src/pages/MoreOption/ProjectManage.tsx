@@ -101,7 +101,7 @@ export default function ProjectManage() {
   if (loading) return <div className="p-8 text-center">Loading...</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Project Management</h1>

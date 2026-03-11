@@ -112,7 +112,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   to={item.href}
                   onClick={() => setIsMobileSidebarOpen(false)}
                   className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors",
+                    "flex items-center px-2 py-1 text-sm font-medium rounded-lg transition-colors",
                     isActive 
                       ? "bg-blue-50 text-blue-700" 
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
@@ -132,7 +132,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 to="/deleted"
                 onClick={() => setIsMobileSidebarOpen(false)}
                 className={cn(
-                  "flex items-center px-2 py-2 text-sm font-medium rounded-lg transition-colors",
+                  "flex items-center px-2 py-1 text-sm font-medium rounded-lg transition-colors",
                   location.pathname === '/deleted'
                     ? "bg-blue-50 text-blue-700"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900",
@@ -150,7 +150,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <button
                 onClick={() => isSidebarOpen ? setIsDataSummaryOpen(!isDataSummaryOpen) : setIsSidebarOpen(true)}
                 className={cn(
-                  "w-full flex items-center justify-between px-2 py-2 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                  "w-full flex items-center justify-between px-2 py-1 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
                   isDataSummaryOpen && "bg-slate-50",
                   !isSidebarOpen && "justify-center"
                 )}
@@ -169,7 +169,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/iesd-summary"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/iesd-summary'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -182,7 +182,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/taken-summary"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/taken-summary'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -195,7 +195,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/dsm-dashboard"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/dsm-dashboard'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -208,7 +208,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/categories-summary"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/categories-summary'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -221,7 +221,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/loan-flow"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/loan-flow'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -239,7 +239,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <button
                 onClick={() => isSidebarOpen ? setIsMoreOptionsOpen(!isMoreOptionsOpen) : setIsSidebarOpen(true)}
                 className={cn(
-                  "w-full flex items-center justify-between px-2 py-2 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
+                  "w-full flex items-center justify-between px-2 py-1 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900",
                   isMoreOptionsOpen && "bg-slate-50",
                   !isSidebarOpen && "justify-center"
                 )}
@@ -258,7 +258,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/other-management"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/other-management'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -271,7 +271,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/calculation"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/calculation'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -285,7 +285,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       to="/increment-record"
                       onClick={() => setIsMobileSidebarOpen(false)}
                       className={cn(
-                        "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                        "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                         location.pathname === '/increment-record'
                           ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                           : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -299,7 +299,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/upload-transactions"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/upload-transactions'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -312,7 +312,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     to="/hazipara-population"
                     onClick={() => setIsMobileSidebarOpen(false)}
                     className={cn(
-                      "flex items-center px-4 py-1.5 text-sm font-medium rounded-lg transition-colors",
+                      "flex items-center px-3 py-1 text-sm font-medium rounded-lg transition-colors",
                       location.pathname === '/hazipara-population'
                         ? "bg-blue-50 text-blue-700 border-l-2 border-blue-600"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"

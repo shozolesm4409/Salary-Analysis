@@ -7,8 +7,8 @@ export default function OtherManagement() {
   const [activeTab, setActiveTab] = useState<'formula' | 'project'>('formula');
 
   return (
-    <div className="space-y-6 pb-10">
-      <div className="flex gap-2 border-b border-slate-200 pb-2">
+    <div className="flex flex-col h-full">
+      <div className="sticky -top-2 lg:-top-4 z-20 bg-slate-50 -mt-2 pt-2 lg:-mt-4 lg:pt-4 flex gap-2 border-b border-slate-200 pb-2 -mx-2 px-2 lg:-mx-4 lg:px-4">
         <button
           onClick={() => setActiveTab('formula')}
           className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${
@@ -31,7 +31,7 @@ export default function OtherManagement() {
         </button>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 flex-1 pb-10">
         {activeTab === 'formula' ? <FormulaManage /> : <ProjectManage />}
       </div>
     </div>

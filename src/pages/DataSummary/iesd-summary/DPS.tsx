@@ -87,30 +87,30 @@ export default function DPS({
             <table className="w-full text-left border-collapse">
               <thead className="sticky top-0 z-20 bg-slate-50">
                 <tr>
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">Name</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">SL</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">Name</th>
                   {allMonths.map(month => (
-                    <th key={month} className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[70px]">
+                    <th key={month} className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[60px]">
                       {format(new Date(month + '-01'), 'MMM-yy')}
                     </th>
                   ))}
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">Remark</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50">Remark</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {categories.map((cat, idx) => (
                   <tr key={cat} className="hover:bg-blue-50/50 transition-colors">
-                    <td className="px-2 py-1 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
-                    <td className="px-2 py-1 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
+                    <td className="px-1 py-1 text-sm font-medium text-slate-500 border border-slate-100 text-center">{idx + 1}</td>
+                    <td className="px-1 py-1 text-sm font-bold text-slate-800 border border-slate-100">{cat}</td>
                     {allMonths.map(month => {
                       const amount = groupedData[cat]?.[month];
                       return (
-                        <td key={month} className="px-2 py-1 text-sm font-medium text-slate-600 border border-slate-100 text-right">
+                        <td key={month} className="px-1 py-1 text-sm font-medium text-slate-600 border border-slate-100 text-right">
                           {amount ? amount.toLocaleString() : ''}
                         </td>
                       );
                     })}
-                    <td className="px-2 py-1 text-sm border border-slate-100"></td>
+                    <td className="px-1 py-1 text-sm border border-slate-100"></td>
                   </tr>
                 ))}
               </tbody>
@@ -126,10 +126,10 @@ export default function DPS({
             <table className="w-full text-left border-collapse">
               <thead className="bg-slate-50">
                 <tr className="bg-slate-100">
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200">Month Name</th>
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">DPS-1</th>
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">DPS-2</th>
-                  <th className="px-2 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Total Amount</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200">Month Name</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">DPS-1</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">DPS-2</th>
+                  <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 text-center">Total Amount</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -140,12 +140,12 @@ export default function DPS({
                   if (total === 0) return null;
                   return (
                     <tr key={month} className="hover:bg-slate-50">
-                      <td className="px-2 py-1 text-sm font-bold border border-slate-100 text-center">
+                      <td className="px-1 py-1 text-sm font-bold border border-slate-100 text-center">
                         {format(new Date(month + '-01'), 'MMM-yy')}
                       </td>
-                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">{dps1 > 0 ? dps1 : ''}</td>
-                      <td className="px-2 py-1 text-sm border border-slate-100 text-center">{dps2 > 0 ? dps2 : ''}</td>
-                      <td className="px-2 py-1 text-sm border border-slate-100 text-center font-bold">{total}</td>
+                      <td className="px-1 py-1 text-sm border border-slate-100 text-center">{dps1 > 0 ? dps1 : ''}</td>
+                      <td className="px-1 py-1 text-sm border border-slate-100 text-center">{dps2 > 0 ? dps2 : ''}</td>
+                      <td className="px-1 py-1 text-sm border border-slate-100 text-center font-bold">{total}</td>
                     </tr>
                   );
                 })}

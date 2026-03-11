@@ -68,7 +68,7 @@ export default function FormulaManage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-3">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-slate-800">Formula Manage</h1>
         <button 

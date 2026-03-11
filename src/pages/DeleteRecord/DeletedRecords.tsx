@@ -7,7 +7,7 @@ export default function DeletedRecords() {
   const [activeTab, setActiveTab] = useState<'transactions' | 'increment'>('transactions');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Tabs */}
       <div className="border-b border-slate-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">

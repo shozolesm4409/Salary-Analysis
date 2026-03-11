@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useIncrementRecords } from '@/hooks/useIncrementRecords';
 import { useSettings } from '@/hooks/useSettings';
-import { format, startOfYear, endOfYear, eachMonthOfInterval } from 'date-fns';
+import { format, startOfYear, endOfYear, eachMonthOfInterval, parseISO } from 'date-fns';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -14,6 +14,7 @@ import {
   Plus,
   Download
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { 
   BarChart, 
   Bar, 
@@ -198,7 +199,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-3">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Dashboard Overview</h1>
@@ -244,46 +245,46 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Total Income</p>
           <p className="text-xl font-bold text-emerald-600">{overallIncome.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Total Expenses</p>
           <p className="text-xl font-bold text-red-600">{overallExpense.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Net Balance</p>
           <p className={`text-xl font-bold ${overallAvailable >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
             {overallAvailable.toLocaleString()}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Saving</p>
           <p className="text-xl font-bold text-amber-600">
             {overallSaving.toLocaleString()}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Bank Loan</p>
           <p className="text-xl font-bold text-blue-600">
             {overallBankLoan.toLocaleString()}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Paid Loan</p>
           <p className="text-xl font-bold text-green-600">
             {overallPaidBankLoan.toLocaleString()}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Due Loan</p>
           <p className="text-xl font-bold text-orange-600">
             {overallDueBankLoan.toLocaleString()}
           </p>
         </div>
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-center">
+        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Home Expense</p>
           <p className="text-xl font-bold text-indigo-600">
             {overallHomeExpense.toLocaleString()}
@@ -294,7 +295,7 @@ export default function Dashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Financial Flow Bar Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100 lg:col-span-2">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Monthly Financial Flow ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -316,43 +317,71 @@ export default function Dashboard() {
 
           {/* Monthly Summary Table */}
           {!isTableHidden('reports_monthly') && (
-            <div className="mt-8 overflow-auto max-h-[400px] rounded-xl border border-slate-200 shadow-inner">
-              <table className="w-full min-w-[600px] text-left border-separate border-spacing-0">
-                <thead className="sticky top-0 z-10">
-                  <tr className="bg-blue-600 text-white">
-                    <th className="px-4 py-3 text-sm font-bold border-b border-blue-700">Month Name</th>
-                    <th className="px-4 py-3 text-sm font-bold text-center border-b border-blue-700">Income</th>
-                    <th className="px-4 py-3 text-sm font-bold text-center border-b border-blue-700">Expenses</th>
-                    <th className="px-4 py-3 text-sm font-bold text-right border-b border-blue-700">Available</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200">
-                  {monthlySummary.map((m) => (
-                    <tr key={m.month} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-4 py-3 text-sm font-medium text-slate-700">{m.fullMonthName}</td>
-                      <td className="px-4 py-3 text-sm text-slate-600 text-center">{m.income.toLocaleString()}</td>
-                      <td className="px-4 py-3 text-sm text-slate-600 text-center">{m.expense.toLocaleString()}</td>
-                      <td className={`px-4 py-3 text-sm font-bold text-right ${m.available >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                        {m.available.toLocaleString()}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className="bg-blue-600 text-white font-bold">
-                    <td className="px-4 py-3 text-sm">Total Amount</td>
-                    <td className="px-4 py-3 text-sm text-center">{yearlyIncome.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-sm text-center">{yearlyExpense.toLocaleString()}</td>
-                    <td className="px-4 py-3 text-sm text-right">{yearlyAvailable.toLocaleString()}</td>
-                  </tr>
-                </tfoot>
-              </table>
+            <div className="mt-8 rounded-l border border-slate-200 shadow-sm bg-white overflow-hidden flex flex-col max-h-[400px]">
+              <div className="hidden sm:flex items-center justify-between px-6 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider shrink-0">
+                <div className="w-48 shrink-0">Month</div>
+                <div className="flex-1 flex justify-center gap-4">
+                  <div className="w-32 text-center">Income</div>
+                  <div className="w-32 text-center">Expense</div>
+                </div>
+                <div className="w-32 shrink-0 text-right">Available</div>
+              </div>
+              <div className="divide-y divide-slate-100 overflow-y-auto">
+                {monthlySummary.map((m) => {
+                  const monthDate = parseISO(`${m.month}-01`);
+                  return (
+                    <div key={m.month} className="hover:bg-slate-50 transition-colors group sm:px-3 sm:py-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+                      <div className="flex items-center justify-between sm:w-48 shrink-0">
+                        <div>
+                          <div className="font-bold text-slate-900 text-base">{format(monthDate, 'MMMM')}</div>
+                          <div className="text-xs text-slate-500">{format(monthDate, 'yyyy')}</div>
+                        </div>
+                        {/* Mobile only available amount */}
+                        <div className="sm:hidden text-right">
+                          <span className={cn(
+                            "font-black text-l",
+                            m.available >= 0 ? "text-blue-600" : "text-rose-600"
+                          )}>
+                            ৳ {m.available.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between sm:justify-center gap-4 flex-1">
+                        <div className="flex flex-col sm:items-center w-full sm:w-32">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider sm:hidden mb-1">Income</span>
+                          <span className="inline-flex items-center justify-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg text-sm w-full">
+                            <TrendingUp className="w-4 h-4 shrink-0" />
+                            <span className="truncate">{m.income.toLocaleString()}</span>
+                          </span>
+                        </div>
+                        <div className="flex flex-col sm:items-center w-full sm:w-32">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider sm:hidden mb-1">Expense</span>
+                          <span className="inline-flex items-center justify-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-lg text-sm w-full">
+                            <TrendingDown className="w-4 h-4 shrink-0" />
+                            <span className="truncate">{m.expense.toLocaleString()}</span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="hidden sm:block text-right sm:w-32 shrink-0">
+                        <span className={cn(
+                          "font-black text-l",
+                          m.available >= 0 ? "text-blue-600" : "text-rose-600"
+                        )}>
+                          ৳ {m.available.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
 
         {/* Category Expense Pie Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Category-wise Expenses</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -379,7 +408,7 @@ export default function Dashboard() {
         </div>
 
         {/* Category Income Pie Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Category-wise Income</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -406,7 +435,7 @@ export default function Dashboard() {
         </div>
 
         {/* Increment Record Pie Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Increment Record (Year vs Amount)</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -433,7 +462,7 @@ export default function Dashboard() {
         </div>
 
         {/* Income vs Expense Bar Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Income vs Expense (Last 6 Months)</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -452,7 +481,7 @@ export default function Dashboard() {
         </div>
 
         {/* Monthly Trend Area Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Financial Trend (Last 6 Months)</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">

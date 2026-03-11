@@ -159,7 +159,7 @@ export default function IESDSummary() {
   }
 
   return (
-    <div className="space-y-4 pb-10">
+    <div className="space-y-3 pb-6">
       {/* Tabs */}
       <div className="flex justify-center gap-2 sm:gap-4 overflow-x-auto no-scrollbar py-2">
         <button

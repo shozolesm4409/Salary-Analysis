@@ -1,14 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
-import { useIncrementRecords } from '@/hooks/useIncrementRecords';
 import { useSettings } from '@/hooks/useSettings';
 import { format, isToday, parseISO, startOfMonth, endOfMonth, isWithinInterval, differenceInMonths } from 'date-fns';
-import { PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { 
   Coins, 
   Wallet, 
   Baby, 
   TrendingUp, 
+  TrendingDown,
   PieChart, 
   Landmark, 
   Users, 
@@ -24,11 +23,10 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type Tab = 'dbp' | 'sdbp' | 'mdbp' | 'loan';
+type Tab = 'dbp' | 'sdbp';
 
 export default function DSMDashboard() {
   const { transactions, loading } = useTransactions();
-  const { records: incrementRecords, loading: incrementLoading } = useIncrementRecords();
   const { isTableHidden } = useSettings();
   const [activeTab, setActiveTab] = useState<Tab>('dbp');
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -52,7 +50,7 @@ export default function DSMDashboard() {
     const todayExpense = today.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     
     const sChildrenBonus = transactions.filter(t => t.category === 'S. Children Bonus').reduce((sum, t) => sum + t.amount, 0);
-    const ebfSaving = transactions.filter(t => t.category === 'EBF Saving').reduce((sum, t) => sum + t.amount, 0);
+    const ebfSaving = transactions.filter(t => t.category === 'Saving' && t.department === 'ORG').reduce((sum, t) => sum + Math.abs(t.amount), 0) * 2;
 
     const monthIncome = thisMonth.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const monthExpense = thisMonth.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
@@ -68,22 +66,22 @@ export default function DSMDashboard() {
     const firstDate = parseISO(sortedTrans[0].date);
     const totalMonths = differenceInMonths(now, firstDate) + 1;
 
-    const totalTaken = transactions.filter(t => t.category === 'Loan Taken').reduce((sum, t) => sum + t.amount, 0);
-    const takenPayment = transactions.filter(t => t.category === 'Loan Taken Payment').reduce((sum, t) => sum + t.amount, 0);
-    const totalLent = transactions.filter(t => t.category === 'Loan Lent').reduce((sum, t) => sum + t.amount, 0);
-    const lentPayment = transactions.filter(t => t.category === 'Loan Lent Payment').reduce((sum, t) => sum + t.amount, 0);
+    const totalTaken = transactions.filter(t => t.category.toLowerCase() === 'taken').reduce((sum, t) => sum + t.amount, 0);
+    const takenPayment = transactions.filter(t => t.category.toLowerCase() === 'given').reduce((sum, t) => sum + t.amount, 0);
+    const totalLent = transactions.filter(t => t.category.toLowerCase() === 'lend').reduce((sum, t) => sum + t.amount, 0);
+    const lentPayment = transactions.filter(t => t.category.toLowerCase() === 'give back').reduce((sum, t) => sum + t.amount, 0);
 
-    const homeAmount = transactions.filter(t => t.category === 'Home Amount').reduce((sum, t) => sum + t.amount, 0);
+    const homeAmount = transactions.filter(t => t.category === 'Home').reduce((sum, t) => sum + t.amount, 0);
     const bankLoan = transactions.filter(t => t.category === 'Bank Loan' && t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const paidBankLoan = transactions.filter(t => t.category === 'Bank Loan' && t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const dueLoan = bankLoan - paidBankLoan;
 
-    const dps1 = transactions.filter(t => t.category === 'DPS-1').reduce((sum, t) => sum + t.amount, 0);
-    const dps2 = transactions.filter(t => t.category === 'DPS-2').reduce((sum, t) => sum + t.amount, 0);
+    const dps1 = transactions.filter(t => (t.category === 'Saving' || t.category === 'Saving Out') && t.department === 'DPS-1').reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    const dps2 = transactions.filter(t => (t.category === 'Saving' || t.category === 'Saving Out') && t.department === 'DPS-2').reduce((sum, t) => sum + Math.abs(t.amount), 0);
     const totalDps = dps1 + dps2;
     
     // DPS Month (count unique months where DPS transactions occurred)
-    const dpsMonths = new Set(transactions.filter(t => t.category.startsWith('DPS')).map(t => t.month)).size;
+    const dpsMonths = new Set(transactions.filter(t => (t.category === 'Saving' || t.category === 'Saving Out') && (t.department === 'DPS-1' || t.department === 'DPS-2')).map(t => t.month)).size;
 
     return {
       todayIncome, todayExpense, sChildrenBonus, ebfSaving,
@@ -95,22 +93,7 @@ export default function DSMDashboard() {
     };
   }, [transactions, currentMonthStr]);
 
-  const incrementChartData = useMemo(() => {
-    if (!incrementRecords.length) return [];
-    
-    // Group by year and sum amounts
-    const grouped = incrementRecords.reduce((acc, record) => {
-      const year = record.year;
-      acc[year] = (acc[year] || 0) + record.amount;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return Object.entries(grouped).map(([name, value]) => ({ name, value }));
-  }, [incrementRecords]);
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1'];
-
-  if (loading || incrementLoading) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -151,25 +134,27 @@ export default function DSMDashboard() {
       isDarkMode ? "bg-[#1a1a1a] text-white" : "bg-slate-50 text-slate-900"
     )}>
       {/* Navigation Tabs */}
-      <div className="flex justify-center gap-1 mb-4 overflow-x-auto pb-2 no-scrollbar">
-        {[
-          { id: 'dbp', label: 'DBP', color: 'bg-blue-600' },
-          { id: 'sdbp', label: 'SDBP', color: 'bg-purple-600' },
-          { id: 'mdbp', label: 'MDBP', color: 'bg-orange-600' },
-          { id: 'loan', label: 'Loan', color: 'bg-amber-600' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as Tab)}
-            className={cn(
-              "px-3 py-1.5 rounded-lg font-bold text-white transition-all transform hover:scale-105 text-xs sm:text-sm whitespace-nowrap",
-              tab.color,
-              activeTab === tab.id ? "ring-2 ring-offset-1 ring-blue-400 scale-105" : "opacity-80"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 pb-1 mb-3 overflow-x-auto no-scrollbar">
+        <button
+          onClick={() => setActiveTab('dbp')}
+          className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
+            activeTab === 'dbp' 
+              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+          }`}
+        >
+          DBP
+        </button>
+        <button
+          onClick={() => setActiveTab('sdbp')}
+          className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
+            activeTab === 'sdbp' 
+              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+          }`}
+        >
+          SDBP
+        </button>
       </div>
 
       {activeTab === 'dbp' && (
@@ -195,9 +180,9 @@ export default function DSMDashboard() {
                   { label: 'Available', value: stats?.available, icon: Landmark },
                   { label: 'Total Month', value: stats?.totalMonths, icon: PieChart, isCurrency: false },
                   { label: 'Total Taken', value: stats?.totalTaken, icon: Users },
-                  { label: 'Taken Payment', value: stats?.takenPayment, icon: CreditCard },
-                  { label: 'Total Lent', value: stats?.totalLent, icon: ArrowRightLeft },
-                  { label: 'Lent Payment', value: stats?.lentPayment, icon: CreditCard },
+                  { label: 'Given', value: stats?.takenPayment, icon: CreditCard },
+                  { label: 'Total Lend', value: stats?.totalLent, icon: ArrowRightLeft },
+                  { label: 'Give Back', value: stats?.lentPayment, icon: CreditCard },
                   { label: 'Home Amount', value: stats?.homeAmount, icon: Home },
                   { label: 'Bank Loan', value: stats?.bankLoan, icon: Landmark },
                   { label: 'Paid Bank Loan', value: stats?.paidBankLoan, icon: CreditCard },
@@ -226,35 +211,6 @@ export default function DSMDashboard() {
                   </div>
                 ))}
               </div>
-
-              {/* Increment Record Pie Chart */}
-              {!isTableHidden('increment_record') && incrementChartData.length > 0 && (
-                <div className="mt-8 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700">
-                  <h3 className="text-xl font-bold text-center mb-6 text-slate-800 dark:text-white">Increment Record Overview (Year vs Amount)</h3>
-                  <div className="h-[300px] w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RechartsPieChart>
-                        <Pie
-                          data={incrementChartData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                          outerRadius={100}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {incrementChartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Tooltip formatter={(value: number) => value.toLocaleString()} />
-                        <Legend />
-                      </RechartsPieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              )}
             </>
           ) : (
             <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-3xl shadow-xl">
@@ -296,328 +252,85 @@ export default function DSMDashboard() {
           </div>
 
           {showMonthlySummary && !isTableHidden('dsm_monthly_summary') && (
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-blue-600 text-white">
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider">Month</th>
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider text-center">Income</th>
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider text-center">Expense</th>
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider text-right">Available</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                    {/* Logic to generate monthly summary rows */}
-                    {Array.from({ length: 12 }, (_, i) => {
-                      const d = new Date();
-                      d.setMonth(d.getMonth() - i);
-                      const mStr = format(d, 'yyyy-MM');
-                      const mTrans = transactions.filter(t => t.month === mStr);
-                      const inc = mTrans.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-                      const exp = mTrans.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-                      if (inc === 0 && exp === 0) return null;
-                      return (
-                        <tr key={mStr} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                          <td className="px-6 py-4 font-medium">{format(d, 'MMMM yyyy')}</td>
-                          <td className="px-6 py-4 text-center text-emerald-600 font-bold">{inc.toLocaleString()}</td>
-                          <td className="px-6 py-4 text-center text-red-600 font-bold">{exp.toLocaleString()}</td>
-                          <td className={cn("px-6 py-4 text-right font-black", (inc - exp) >= 0 ? "text-blue-600" : "text-red-600")}>
-                            {(inc - exp).toLocaleString()}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+            <div className="bg-white rounded-l shadow-xl overflow-hidden border border-slate-200 mt-6 flex flex-col max-h-[400px]">
+              <div className="bg-white px-2 sm:px-3 py-2 border-b border-slate-200 flex justify-between items-center shrink-0">
+                <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <CalendarCheck className="w-5 h-5 text-blue-600" />
+                  Monthly Summary Report
+                </h3>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'mdbp' && (
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h1 className="text-3xl font-black text-center">Salary Summary</h1>
-          <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-orange-500 to-red-600 px-8 py-2 rounded-full text-white font-bold shadow-lg">
-              {format(now, 'MMMM yyyy')}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {[
-              { label: 'Monthly Salary', value: transactions.filter(t => t.category === 'Salary' && t.month === currentMonthStr).reduce((s, t) => s + t.amount, 0), gradient: 'from-[#196f3d] to-[#27ae60]' },
-              { label: 'Bonus Received', value: transactions.filter(t => t.category === 'Bonus' && t.month === currentMonthStr).reduce((s, t) => s + t.amount, 0), gradient: 'from-[#ff6a00] to-[#ee0979]' },
-              { label: 'Total Earnings', value: transactions.filter(t => t.type === 'income' && t.month === currentMonthStr).reduce((s, t) => s + t.amount, 0), gradient: 'from-[#43cea2] to-[#185a9d]' },
-              { label: 'Net Pay', value: transactions.filter(t => t.type === 'income' && t.month === currentMonthStr).reduce((s, t) => s + t.amount, 0), gradient: 'from-[#6a11cb] to-[#2575fc]' },
-            ].map((box, i) => (
-              <div key={i} className={cn("p-2 rounded-lg shadow-lg text-white text-center bg-gradient-to-br", box.gradient)}>
-                <h2 className="text-xl font-black">{Math.floor(box.value || 0).toLocaleString()}</h2>
-                <p className="text-[10px] font-bold mt-0.5 uppercase">{box.label}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            {!isTableHidden('dsm_salary_summary') && (
-              <button 
-                onClick={() => setShowSalarySummary(!showSalarySummary)}
-                className="bg-orange-600 text-white px-3 py-1 rounded-lg font-bold shadow-lg hover:bg-orange-700 transition-all text-xs"
-              >
-                {showSalarySummary ? 'Hide Salary Summary' : 'Show Salary Summary'}
-              </button>
-            )}
-          </div>
-
-          {showSalarySummary && !isTableHidden('dsm_salary_summary') && (
-            <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-orange-600 text-white">
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider">Category</th>
-                      <th className="px-6 py-4 font-bold uppercase tracking-wider text-right">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                    {transactions.filter(t => t.type === 'income' && t.month === currentMonthStr).map((t, i) => (
-                      <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                        <td className="px-6 py-4">{t.date}</td>
-                        <td className="px-6 py-4">{t.category}</td>
-                        <td className="px-6 py-4 text-right font-bold text-orange-600">{t.amount.toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {activeTab === 'loan' && (
-        <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h1 className="text-3xl font-black text-center">
-            {loanSubTab === 'personal' ? 'Personal Loan History' : 
-             loanSubTab === 'home' ? 'Home & Bank History' : 'Bank Loan History'}
-          </h1>
-          
-          <div className="flex justify-center gap-2">
-            {[
-              { id: 'personal', label: 'P. Loan' },
-              { id: 'home', label: 'Home & Bank' },
-              { id: 'bank', label: 'Bank Loan' }
-            ].map(sub => (
-              <button
-                key={sub.id}
-                onClick={() => setLoanSubTab(sub.id as any)}
-                className={cn(
-                  "px-3 py-1 rounded-lg font-bold transition-all text-xs",
-                  loanSubTab === sub.id ? "bg-amber-600 text-white shadow-lg" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400"
-                )}
-              >
-                {sub.label}
-              </button>
-            ))}
-          </div>
-
-          {loanSubTab === 'personal' && (
-            <div className="space-y-8">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
-                {[
-                  { label: 'Total Taken', value: stats?.totalTaken, gradient: 'from-[#196f3d] to-[#27ae60]' },
-                  { label: 'Taken Payment', value: stats?.takenPayment, gradient: 'from-[#6a11cb] to-[#2575fc]' },
-                  { label: 'Due Payment', value: (stats?.totalTaken || 0) - (stats?.takenPayment || 0), gradient: 'from-[#7b4397] to-[#dc2430]' },
-                  { label: 'Total Lent', value: stats?.totalLent, gradient: 'from-[#34e89e] to-[#0f3443]' },
-                  { label: 'Lent Payment', value: stats?.lentPayment, gradient: 'from-[#b71c1c] to-[#4a0000]' },
-                  { label: 'Due Lent', value: (stats?.totalLent || 0) - (stats?.lentPayment || 0), gradient: 'from-[#0d47a1] to-[#001f4d]' },
-                ].map((box, i) => (
-                  <div key={i} className={cn("p-2 rounded-lg shadow-lg text-white text-center bg-gradient-to-br", box.gradient)}>
-                    <h2 className="text-xl font-black">{Math.floor(box.value || 0).toLocaleString()}</h2>
-                    <p className="text-[10px] font-bold mt-0.5 uppercase">{box.label}</p>
-                  </div>
-                ))}
+              
+              <div className="hidden sm:grid grid-cols-4 gap-4 px-6 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider shrink-0">
+                <div>Month</div>
+                <div className="text-center">Income</div>
+                <div className="text-center">Expense</div>
+                <div className="text-right">Available</div>
               </div>
 
-              <div className="flex justify-center gap-4">
-                {!isTableHidden('dsm_personal_loan') && (
-                  <>
-                    <button 
-                      onClick={() => setPersonalView(personalView === 'taken' ? 'none' : 'taken')}
-                      className="bg-blue-600 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-blue-700 transition-all text-xs"
-                    >
-                      {personalView === 'taken' ? 'Hide Taken' : 'View Taken'}
-                    </button>
-                    <button 
-                      onClick={() => setPersonalView(personalView === 'lent' ? 'none' : 'lent')}
-                      className="bg-red-600 text-white px-3 py-1 rounded-lg font-bold shadow-md hover:bg-red-700 transition-all text-xs"
-                    >
-                      {personalView === 'lent' ? 'Hide Lent' : 'View Lent'}
-                    </button>
-                  </>
-                )}
-              </div>
+              <div className="divide-y divide-slate-100 overflow-y-auto">
+                {/* Logic to generate monthly summary rows */}
+                {Array.from({ length: 12 }, (_, i) => {
+                  const d = new Date();
+                  d.setMonth(d.getMonth() - i);
+                  const mStr = format(d, 'yyyy-MM');
+                  const mTrans = transactions.filter(t => t.month === mStr);
+                  const inc = mTrans.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+                  const exp = mTrans.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+                  if (inc === 0 && exp === 0) return null;
+                  
+                  const available = inc - exp;
+                  
+                  return (
+                    <div key={mStr} className="bg-white hover:bg-slate-50 transition-colors group sm:px-3 sm:py-1 flex flex-col sm:grid sm:grid-cols-4 sm:items-center gap-4">
+                      <div className="flex items-center justify-between sm:justify-start gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm shrink-0">
+                            {format(d, 'MMM')}
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900">{format(d, 'MMMM')}</div>
+                            <div className="text-xs text-slate-500">{format(d, 'yyyy')}</div>
+                          </div>
+                        </div>
+                        {/* Mobile only available amount */}
+                        <div className="sm:hidden text-right">
+                          <span className={cn(
+                            "font-black text-l",
+                            available >= 0 ? "text-blue-600" : "text-rose-600"
+                          )}>
+                            ৳ {available.toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between sm:justify-center sm:col-span-2 gap-4">
+                        <div className="flex flex-col sm:items-center w-full sm:w-auto">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider sm:hidden mb-1">Income</span>
+                          <span className="inline-flex items-center justify-center gap-1 font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg text-sm w-full sm:w-auto">
+                            <TrendingUp className="w-4 h-4 shrink-0" />
+                            <span className="truncate">{inc.toLocaleString()}</span>
+                          </span>
+                        </div>
+                        <div className="flex flex-col sm:items-center w-full sm:w-auto">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider sm:hidden mb-1">Expense</span>
+                          <span className="inline-flex items-center justify-center gap-1 font-semibold text-rose-600 bg-rose-50 px-2 py-1 rounded-lg text-sm w-full sm:w-auto">
+                            <TrendingDown className="w-4 h-4 shrink-0" />
+                            <span className="truncate">{exp.toLocaleString()}</span>
+                          </span>
+                        </div>
+                      </div>
 
-              {personalView !== 'none' && !isTableHidden('dsm_personal_loan') && (
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-800 text-white">
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Date</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Description</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider text-right">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {transactions.filter(t => 
-                          personalView === 'taken' ? (t.category === 'Loan Taken' || t.category === 'Loan Taken Payment') :
-                          (t.category === 'Loan Lent' || t.category === 'Loan Lent Payment')
-                        ).map((t, i) => (
-                          <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <td className="px-6 py-4">{t.date}</td>
-                            <td className="px-6 py-4">{t.description || t.category}</td>
-                            <td className={cn("px-6 py-4 text-right font-bold", t.category.includes('Payment') ? "text-emerald-600" : "text-red-600")}>
-                              {t.amount.toLocaleString()}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {loanSubTab === 'home' && (
-            <div className="space-y-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                {[
-                  { label: 'Home Total', value: stats?.homeAmount, gradient: 'box-1' },
-                  { label: 'Bank Total', value: stats?.bankLoan, gradient: 'box-2' },
-                  { label: 'Paid Bank', value: stats?.paidBankLoan, gradient: 'box-3' },
-                  { label: 'Due Bank', value: stats?.dueLoan, gradient: 'box-4' },
-                ].map((box, i) => (
-                  <div key={i} className={cn("p-2 rounded-lg shadow-lg text-white text-center bg-gradient-to-br", 
-                    i === 0 ? "from-[#196f3d] to-[#27ae60]" :
-                    i === 1 ? "from-[#6a11cb] to-[#2575fc]" :
-                    i === 2 ? "from-[#43cea2] to-[#185a9d]" : "from-[#ff6a00] to-[#ee0979]"
-                  )}>
-                    <h2 className="text-xl font-black">{Math.floor(box.value || 0).toLocaleString()}</h2>
-                    <p className="text-[10px] font-bold mt-0.5 uppercase">{box.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center">
-                {!isTableHidden('dsm_home_bank_loan') && (
-                  <button 
-                    onClick={() => setShowHomeLoanSummary(!showHomeLoanSummary)}
-                    className="bg-blue-600 text-white px-3 py-1 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition-all text-xs"
-                  >
-                    {showHomeLoanSummary ? 'Hide Loan Summary' : 'Show Loan Summary'}
-                  </button>
-                )}
-              </div>
-
-              {showHomeLoanSummary && !isTableHidden('dsm_home_bank_loan') && (
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-800 text-white">
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Date</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Category</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider text-right">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {transactions.filter(t => t.category === 'Home Amount' || t.category === 'Bank Loan').map((t, i) => (
-                          <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <td className="px-6 py-4">{t.date}</td>
-                            <td className="px-6 py-4">{t.category}</td>
-                            <td className="px-6 py-4 text-right font-bold">{t.amount.toLocaleString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {loanSubTab === 'bank' && (
-            <div className="space-y-8">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                {[
-                  { label: 'Total Loan', value: stats?.bankLoan, gradient: 'from-[#b32b2b] to-[#b34724]' },
-                  { label: 'Paid Amount', value: stats?.paidBankLoan, gradient: 'from-[#2c70b3] to-[#009aa6]' },
-                  { label: 'Due Balance', value: stats?.dueLoan, gradient: 'from-[#279945] to-[#20a88a]' },
-                  { label: 'Installments', value: transactions.filter(t => t.category === 'Bank Loan' && t.type === 'expense').length, gradient: 'from-[#b33861] to-[#b38f00]', isCurrency: false },
-                ].map((box, i) => (
-                  <div key={i} className={cn("p-2 rounded-lg shadow-lg text-white text-center bg-gradient-to-br", box.gradient)}>
-                    <h2 className="text-xl font-black">
-                      {box.isCurrency === false ? box.value : Math.floor(box.value || 0).toLocaleString()}
-                    </h2>
-                    <p className="text-[10px] font-bold mt-0.5 uppercase">{box.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex justify-center gap-2">
-                {[
-                  { id: 'summary', label: 'Summary', color: 'bg-blue-700' },
-                  { id: 'taken', label: 'Taken', color: 'bg-emerald-700' },
-                  { id: 'given', label: 'Given', color: 'bg-red-700' }
-                ].map(sub => (
-                  <button
-                    key={sub.id}
-                    onClick={() => setBankLoanTable(sub.id as any)}
-                    className={cn(
-                      "px-3 py-1 rounded-lg font-bold text-white transition-all text-xs",
-                      sub.color,
-                      bankLoanTable === sub.id ? "ring-2 ring-offset-1 ring-slate-400 scale-105" : "opacity-80"
-                    )}
-                  >
-                    {sub.label}
-                  </button>
-                ))}
-              </div>
-
-              <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
-                {!isTableHidden('dsm_bank_loan') ? (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                      <thead>
-                        <tr className="bg-slate-600 text-white">
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Date</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider">Reference</th>
-                          <th className="px-6 py-4 font-bold uppercase tracking-wider text-right">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
-                        {transactions.filter(t => 
-                          bankLoanTable === 'summary' ? (t.category === 'Bank Loan') :
-                          bankLoanTable === 'taken' ? (t.category === 'Bank Loan' && t.type === 'income') : (t.category === 'Bank Loan' && t.type === 'expense')
-                        ).map((t, i) => (
-                          <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                            <td className="px-6 py-4">{t.date}</td>
-                            <td className="px-6 py-4">{t.description || t.category}</td>
-                            <td className="px-6 py-4 text-right font-bold">{t.amount.toLocaleString()}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <div className="p-8 text-center text-slate-500 italic">
-                    This table is hidden by administrator settings.
-                  </div>
-                )}
+                      <div className="hidden sm:block text-right">
+                        <span className={cn(
+                          "font-black text-l",
+                          available >= 0 ? "text-blue-600" : "text-rose-600"
+                        )}>
+                          ৳ {available.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}

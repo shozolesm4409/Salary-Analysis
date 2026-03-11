@@ -85,13 +85,13 @@ export default function Settings() {
   if (settingsLoading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-l h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {error && (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
           <div className="flex items-center">

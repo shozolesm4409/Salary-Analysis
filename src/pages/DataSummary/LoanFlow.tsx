@@ -364,7 +364,7 @@ export default function LoanFlow() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-slate-800">Loan Flow</h1>
         <div className="relative w-full sm:w-auto">
