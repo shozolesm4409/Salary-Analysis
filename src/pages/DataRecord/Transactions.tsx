@@ -34,13 +34,14 @@ export default function Transactions() {
   const itemsPerPage = 10;
 
   // Get available years from transactions
-  const availableYears = Array.from(new Set(transactions.map(t => t.month.split('-')[0]))).sort((a, b) => (b as string).localeCompare(a as string));
+  const availableYears = Array.from(new Set(transactions.map(t => (t.month || '').split('-')[0]).filter(Boolean))).sort((a, b) => (b as string).localeCompare(a as string));
 
   // Get available months for the selected year from database
   const availableMonths = Array.from(new Set(
     transactions
-      .filter(t => filterYear === 'all' || t.month.startsWith(filterYear))
-      .map(t => t.month)
+      .filter(t => filterYear === 'all' || (t.month || '').startsWith(filterYear))
+      .map(t => t.month || '')
+      .filter(Boolean)
   )).sort((a, b) => (b as string).localeCompare(a as string));
 
   // Get available categories based on type
@@ -56,24 +57,24 @@ export default function Transactions() {
     if (!searchLower) return (
       (filterType === 'all' || t.type === filterType) &&
       (filterCategory === 'all' || t.category === filterCategory) &&
-      (filterYear === 'all' || t.month.startsWith(filterYear)) &&
+      (filterYear === 'all' || (t.month || '').startsWith(filterYear)) &&
       (filterMonth === 'all' || t.month === filterMonth)
     );
 
     const searchWords = searchLower.split(/[,\s]+/).filter(word => word.length > 0);
     
     const matchesSearch = searchWords.every(word => 
-      t.category.toLowerCase().includes(word) ||
-      t.department.toLowerCase().includes(word) ||
-      t.description?.toLowerCase().includes(word) ||
-      t.type.toLowerCase().includes(word) ||
-      t.amount.toString().includes(word) ||
-      format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word)
+      (t.category || '').toLowerCase().includes(word) ||
+      (t.department || '').toLowerCase().includes(word) ||
+      (t.description || '').toLowerCase().includes(word) ||
+      (t.type || '').toLowerCase().includes(word) ||
+      (t.amount || '').toString().includes(word) ||
+      (t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word) : false)
     );
     
     const matchesType = filterType === 'all' || t.type === filterType;
     const matchesCategory = filterCategory === 'all' || t.category === filterCategory;
-    const matchesYear = filterYear === 'all' || t.month.startsWith(filterYear);
+    const matchesYear = filterYear === 'all' || (t.month || '').startsWith(filterYear);
     const matchesMonth = filterMonth === 'all' || t.month === filterMonth;
 
     return matchesSearch && matchesType && matchesCategory && matchesYear && matchesMonth;
@@ -267,7 +268,7 @@ export default function Transactions() {
                         {(currentPage - 1) * itemsPerPage + index + 1}
                       </td>
                       <td className="px-2 py-1 text-sm text-slate-900 font-medium">
-                        {format(new Date(t.date), 'dd MMM yyyy')}
+                        {t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}
                       </td>
                       <td className="px-2 py-1">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${

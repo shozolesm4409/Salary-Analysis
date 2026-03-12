@@ -244,7 +244,7 @@ export default function Saving({
                   <th className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 min-w-[150px]">Saving Type</th>
                   {allMonths.map(month => (
                     <th key={month} className="px-1 py-1 text-xs font-black text-slate-700 uppercase border border-slate-200 bg-slate-50 text-center min-w-[60px]">
-                      {format(new Date(month + '-01'), 'MMM-yy')}
+                      {month && !isNaN(new Date(month + '-01').getTime()) ? format(new Date(month + '-01'), 'MMM-yy') : month}
                     </th>
                   ))}
                 </tr>

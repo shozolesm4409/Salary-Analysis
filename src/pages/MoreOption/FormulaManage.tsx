@@ -28,7 +28,7 @@ export default function FormulaManage() {
 
   const fetchFormulas = async () => {
     if (!user) return;
-    const q = query(collection(db, 'formulas'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'formulas'));
     const querySnapshot = await getDocs(q);
     const formulasData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Formula));
     setFormulas(formulasData);

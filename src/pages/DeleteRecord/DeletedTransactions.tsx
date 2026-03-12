@@ -37,12 +37,12 @@ export default function DeletedTransactions() {
     const searchWords = searchLower.split(/[,\s]+/).filter(word => word.length > 0);
     
     const matchesSearch = searchWords.every(word => 
-      t.category.toLowerCase().includes(word) ||
-      t.department.toLowerCase().includes(word) ||
-      t.description?.toLowerCase().includes(word) ||
-      t.type.toLowerCase().includes(word) ||
-      t.amount.toString().includes(word) ||
-      format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word)
+      (t.category || '').toLowerCase().includes(word) ||
+      (t.department || '').toLowerCase().includes(word) ||
+      (t.description || '').toLowerCase().includes(word) ||
+      (t.type || '').toLowerCase().includes(word) ||
+      (t.amount || '').toString().includes(word) ||
+      (t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy').toLowerCase().includes(word) : false)
     );
     return matchesSearch;
   });
@@ -160,7 +160,7 @@ export default function DeletedTransactions() {
                   paginatedTransactions.map((t) => (
                     <tr key={t.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-2 py-1 text-sm text-slate-900 font-medium">
-                        {format(new Date(t.date), 'dd MMM yyyy')}
+                        {t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}
                       </td>
                       <td className="px-2 py-1">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${

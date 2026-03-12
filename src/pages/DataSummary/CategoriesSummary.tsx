@@ -253,7 +253,7 @@ export default function CategoriesSummary() {
                           {/* Mobile View */}
                           <td className="md:hidden block px-4 py-1">
                             <div className="flex justify-between items-center mb-2">
-                              <span className="text-sm text-slate-500">{format(new Date(t.date), 'dd MMM yyyy')}</span>
+                              <span className="text-sm text-slate-500">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</span>
                               <span className="text-sm font-bold text-slate-900 text-right">{t.amount.toLocaleString()}</span>
                             </div>
                             <div className="flex flex-col gap-1">
@@ -264,7 +264,7 @@ export default function CategoriesSummary() {
                           
                           {/* Desktop View */}
                           <td className="hidden md:table-cell px-4 py-1 text-slate-600 whitespace-nowrap border-b border-slate-100">
-                            {format(new Date(t.date), 'dd MMM yyyy')}
+                            {t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}
                           </td>
                           <td className="hidden md:table-cell px-4 py-1 text-slate-700 whitespace-nowrap border-b border-slate-100">
                             {t.department}

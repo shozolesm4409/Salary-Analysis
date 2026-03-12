@@ -70,7 +70,7 @@ export default function LoanFlow() {
     const fetchData = async () => {
       if (!user) return;
       try {
-        const q = query(collection(db, 'loan_schedules'), where('userId', '==', user.uid));
+        const q = query(collection(db, 'loan_schedules'));
         const querySnapshot = await getDocs(q);
         const schedules: Record<string, LoanScheduleRow[]> = {};
         const settings: Record<string, CustomSettings> = {};

@@ -21,7 +21,7 @@ export function useTransactions() {
     }
 
     // Active transactions
-    const q = query(collection(db, 'transactions'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'transactions'));
     const unsubActive = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -43,7 +43,7 @@ export function useTransactions() {
     });
 
     // Deleted transactions
-    const qDeleted = query(collection(db, 'deleted_transactions'), where('userId', '==', user.uid));
+    const qDeleted = query(collection(db, 'deleted_transactions'));
     const unsubDeleted = onSnapshot(qDeleted, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,

@@ -389,7 +389,7 @@ export default function TakenSummary() {
                               }`}>
                                 {t.type}
                               </span>
-                              <span className="text-sm text-slate-500">{format(new Date(t.date), 'dd MMM yyyy')}</span>
+                              <span className="text-sm text-slate-500">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</span>
                             </div>
                             <div className="grid grid-cols-3 items-center">
                               <span className="text-sm font-medium text-slate-700 text-left truncate pr-2">{t.department}</span>
@@ -400,7 +400,7 @@ export default function TakenSummary() {
                           
                           {/* Desktop View */}
                           <td className="hidden md:table-cell px-4 py-.5 text-slate-600 whitespace-nowrap border-b border-slate-100">
-                            {format(new Date(t.date), 'dd MMM yyyy')}
+                            {t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}
                           </td>
                           <td className="hidden md:table-cell px-4 py-.5 font-medium capitalize whitespace-nowrap border-b border-slate-100">
                             {t.category}

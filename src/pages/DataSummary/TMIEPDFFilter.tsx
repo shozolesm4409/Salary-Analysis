@@ -137,7 +137,7 @@ export default function TMIEPDFFilter() {
     
     const tableColumn = ["Date", "Type", "Category", "Department", "Amount", "Description"];
     const tableRows = data.map(t => [
-      format(new Date(t.date), 'dd MMM yyyy'),
+      t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date',
       t.type,
       t.category,
       t.department,
@@ -254,7 +254,7 @@ export default function TMIEPDFFilter() {
                       {todayTransactions.length > 0 ? (
                         todayTransactions.map((t) => (
                           <tr key={t.id} className="hover:bg-slate-50">
-                            <td className="px-4 py-2">{format(new Date(t.date), 'dd MMM yyyy')}</td>
+                            <td className="px-4 py-2">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</td>
                             <td className="px-4 py-2 capitalize">{t.type}</td>
                             <td className="px-4 py-2">{t.category}</td>
                             <td className="px-4 py-2">{t.department}</td>
@@ -419,7 +419,7 @@ export default function TMIEPDFFilter() {
                         })
                         .map((t) => (
                           <tr key={t.id} className="hover:bg-slate-50">
-                            <td className="px-4 py-2">{format(new Date(t.date), 'dd MMM yyyy')}</td>
+                            <td className="px-4 py-2">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</td>
                             <td className="px-4 py-2 capitalize">{t.type}</td>
                             <td className="px-4 py-2">{t.category}</td>
                             <td className="px-4 py-2">{t.department}</td>
@@ -453,7 +453,7 @@ export default function TMIEPDFFilter() {
                       <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm relative">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <p className="text-xs font-semibold text-slate-500">{format(new Date(t.date), 'dd MMM yyyy')}</p>
+                            <p className="text-xs font-semibold text-slate-500">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</p>
                             <h4 className="font-bold text-slate-800 mt-1">{t.category}</h4>
                           </div>
                           <span className={cn(
@@ -539,7 +539,7 @@ export default function TMIEPDFFilter() {
                     <tbody className="divide-y divide-slate-100">
                       {pdfTransactions.map((t) => (
                         <tr key={t.id} className="hover:bg-slate-50">
-                          <td className="px-4 py-2">{format(new Date(t.date), 'dd MMM yyyy')}</td>
+                          <td className="px-4 py-2">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</td>
                           <td className="px-4 py-2 capitalize">{t.type}</td>
                           <td className="px-4 py-2">{t.category}</td>
                           <td className="px-4 py-2">{t.department}</td>
@@ -567,7 +567,7 @@ export default function TMIEPDFFilter() {
                     <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm relative">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <p className="text-xs font-semibold text-slate-500">{format(new Date(t.date), 'dd MMM yyyy')}</p>
+                          <p className="text-xs font-semibold text-slate-500">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</p>
                           <h4 className="font-bold text-slate-800 mt-1">{t.category}</h4>
                         </div>
                         <span className={cn(
@@ -683,7 +683,7 @@ export default function TMIEPDFFilter() {
                     <tbody className="divide-y divide-slate-100">
                       {ieTransactions.map((t) => (
                         <tr key={t.id} className="hover:bg-slate-50">
-                          <td className="px-4 py-2">{format(new Date(t.date), 'dd MMM yyyy')}</td>
+                          <td className="px-4 py-2">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</td>
                           <td className="px-4 py-2 capitalize">{t.type}</td>
                           <td className="px-4 py-2 font-bold">{t.amount.toLocaleString()}</td>
                           <td className="px-4 py-2">{t.department}</td>
@@ -708,7 +708,7 @@ export default function TMIEPDFFilter() {
                     <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm relative">
                       <div className="flex justify-between items-start mb-2">
                         <div>
-                          <p className="text-xs font-semibold text-slate-500">{format(new Date(t.date), 'dd MMM yyyy')}</p>
+                          <p className="text-xs font-semibold text-slate-500">{t.date && !isNaN(new Date(t.date).getTime()) ? format(new Date(t.date), 'dd MMM yyyy') : 'Invalid Date'}</p>
                           <h4 className="font-bold text-slate-800 mt-1 capitalize">{t.type}</h4>
                         </div>
                         <span className={cn(

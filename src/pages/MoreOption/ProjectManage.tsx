@@ -22,7 +22,7 @@ export default function ProjectManage() {
 
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, 'projects'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'projects'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Project[];
       // Sort in-memory to avoid composite index requirement

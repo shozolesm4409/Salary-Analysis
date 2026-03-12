@@ -108,7 +108,7 @@ export default function IESDSummary() {
 
   // Get all unique months in descending order
   const allMonths = useMemo(() => {
-    const months = Array.from(new Set(transactions.map(t => t.month))) as string[];
+    const months = Array.from(new Set(transactions.map(t => t.month || '').filter(Boolean))) as string[];
     return months.sort((a, b) => b.localeCompare(a));
   }, [transactions]);
 

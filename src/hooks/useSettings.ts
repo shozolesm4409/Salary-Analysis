@@ -70,9 +70,15 @@ export function useSettings() {
         }
       });
 
-      const mergedData = defaultSettings.map(defaultSetting => {
-        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
-        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      // Deduplicate data from Firestore by name
+      const uniqueData = data.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      // Add any missing default settings
+      const mergedData = [...uniqueData];
+      defaultSettings.forEach(ds => {
+        if (!mergedData.find(s => s.name === ds.name)) {
+          mergedData.push(ds);
+        }
       });
 
       setLandingSettings(mergedData);
@@ -89,23 +95,8 @@ export function useSettings() {
       setLoading(false);
     });
 
-    if (!user) {
-      setCategories([]);
-      setDepartments([]);
-      setTableSettings([]);
-      setButtonSettings([]);
-      setActionSettings([]);
-      setError(null);
-      return () => {
-        unsubLandingSettings();
-      };
-    }
-
     const catQuery = query(collection(db, 'categories'), orderBy('name', 'asc'));
     const deptQuery = query(collection(db, 'departments'), orderBy('name', 'asc'));
-    const tableSettingsQuery = query(collection(db, 'table_settings'));
-    const buttonSettingsQuery = query(collection(db, 'button_settings'));
-    const actionSettingsQuery = query(collection(db, 'action_settings'));
 
     const unsubCats = onSnapshot(catQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Category[];
@@ -132,6 +123,22 @@ export function useSettings() {
         setError(err.message);
       }
     });
+
+    if (!user) {
+      setTableSettings([]);
+      setButtonSettings([]);
+      setActionSettings([]);
+      setError(null);
+      return () => {
+        unsubLandingSettings();
+        unsubCats();
+        unsubDepts();
+      };
+    }
+
+    const tableSettingsQuery = query(collection(db, 'table_settings'));
+    const buttonSettingsQuery = query(collection(db, 'button_settings'));
+    const actionSettingsQuery = query(collection(db, 'action_settings'));
 
     const unsubTableSettings = onSnapshot(tableSettingsQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TableSetting[];
@@ -169,9 +176,15 @@ export function useSettings() {
         }
       });
 
-      const mergedData = defaultSettings.map(defaultSetting => {
-        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
-        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      // Deduplicate data from Firestore by name
+      const uniqueData = data.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      // Add any missing default settings
+      const mergedData = [...uniqueData];
+      defaultSettings.forEach(ds => {
+        if (!mergedData.find(s => s.name === ds.name)) {
+          mergedData.push(ds);
+        }
       });
 
       setTableSettings(mergedData);
@@ -224,9 +237,15 @@ export function useSettings() {
         }
       });
 
-      const mergedData = defaultSettings.map(defaultSetting => {
-        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
-        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      // Deduplicate data from Firestore by name
+      const uniqueData = data.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      // Add any missing default settings
+      const mergedData = [...uniqueData];
+      defaultSettings.forEach(ds => {
+        if (!mergedData.find(s => s.name === ds.name)) {
+          mergedData.push(ds);
+        }
       });
 
       setButtonSettings(mergedData);
@@ -267,9 +286,15 @@ export function useSettings() {
         }
       });
 
-      const mergedData = defaultSettings.map(defaultSetting => {
-        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
-        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      // Deduplicate data from Firestore by name
+      const uniqueData = data.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      // Add any missing default settings
+      const mergedData = [...uniqueData];
+      defaultSettings.forEach(ds => {
+        if (!mergedData.find(s => s.name === ds.name)) {
+          mergedData.push(ds);
+        }
       });
 
       setActionSettings(mergedData);
@@ -307,8 +332,9 @@ export function useSettings() {
     };
   }, [user]);
 
-  const addCategory = async (cat: Omit<Category, 'id'>) => {
-    await addDoc(collection(db, 'categories'), cat);
+  const addCategory = async (cat: Omit<Category, 'id' | 'userId'>) => {
+    if (!user) throw new Error("Must be logged in to add category");
+    await addDoc(collection(db, 'categories'), { ...cat, userId: user.uid });
   };
 
   const updateCategory = async (id: string, data: Partial<Category>) => {
@@ -319,8 +345,9 @@ export function useSettings() {
     await deleteDoc(doc(db, 'categories', id));
   };
 
-  const addDepartment = async (dept: Omit<Department, 'id'>) => {
-    await addDoc(collection(db, 'departments'), dept);
+  const addDepartment = async (dept: Omit<Department, 'id' | 'userId'>) => {
+    if (!user) throw new Error("Must be logged in to add department");
+    await addDoc(collection(db, 'departments'), { ...dept, userId: user.uid });
   };
 
   const updateDepartment = async (id: string, data: Partial<Department>) => {

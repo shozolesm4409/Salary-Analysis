@@ -17,7 +17,7 @@ export function useProfitRecords() {
       return;
     }
 
-    const q = query(collection(db, 'profit_records'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'profit_records'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,

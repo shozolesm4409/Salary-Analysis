@@ -34,7 +34,7 @@ export function useIncrementRecords() {
     }
 
     // Active records
-    const q = query(collection(db, 'increment_records'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'increment_records'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -63,7 +63,7 @@ export function useIncrementRecords() {
     });
 
     // Deleted records
-    const qDeleted = query(collection(db, 'deleted_increment_records'), where('userId', '==', user.uid));
+    const qDeleted = query(collection(db, 'deleted_increment_records'));
     const unsubDeleted = onSnapshot(qDeleted, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,

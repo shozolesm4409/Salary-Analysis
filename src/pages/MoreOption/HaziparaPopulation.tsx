@@ -29,7 +29,7 @@ export default function HaziparaPopulation() {
 
   useEffect(() => {
     if (!user) return;
-    const q = query(collection(db, 'hazipara_population'), where('userId', '==', user.uid));
+    const q = query(collection(db, 'hazipara_population'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as PopulationData));
       // Sort in-memory to avoid composite index requirement
