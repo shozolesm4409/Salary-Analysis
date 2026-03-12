@@ -131,25 +131,9 @@ export default function Dashboard() {
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0);
 
-  let monthsToDisplay: Date[] = [];
-  if (selectedYear === 'All') {
-    if (transactions.length > 0) {
-      const sortedMonths = [...transactions].sort((a, b) => a.month.localeCompare(b.month));
-      const firstMonth = new Date(sortedMonths[0].month + '-01');
-      const lastMonth = new Date(sortedMonths[sortedMonths.length - 1].month + '-01');
-      monthsToDisplay = eachMonthOfInterval({ start: firstMonth, end: lastMonth });
-    } else {
-      monthsToDisplay = eachMonthOfInterval({
-        start: startOfYear(new Date()),
-        end: endOfYear(new Date())
-      });
-    }
-  } else {
-    monthsToDisplay = eachMonthOfInterval({
-      start: startOfYear(new Date(parseInt(selectedYear), 0, 1)),
-      end: endOfYear(new Date(parseInt(selectedYear), 0, 1))
-    });
-  }
+  const monthsToDisplay = Array.from(new Set(filteredTransactions.map(t => t.month)))
+    .sort()
+    .map(m => parseISO(`${m}-01`));
 
   const monthlySummary = monthsToDisplay.map(month => {
     const monthStr = format(month, 'yyyy-MM');
