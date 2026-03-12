@@ -64,6 +64,7 @@ export default function EditProfile() {
 
       // Store in Firestore
       await setDoc(doc(db, 'users', user.uid), {
+        userId: user.uid,
         displayName: displayName,
         email: user.email,
         photoBase64: photoBase64,

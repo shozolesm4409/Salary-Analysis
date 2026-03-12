@@ -3,6 +3,8 @@ import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Lock } from 'lucide-react';
 import PublicHeader from '@/components/PublicHeader';
+import PublicFooter from '@/components/PublicFooter';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -30,92 +32,72 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col pb-16 md:pb-0">
       <PublicHeader />
-      <div className="flex-1 flex items-center justify-center p-4 pt-20">
-        <div className="max-w-[380px] w-full bg-white rounded-[32px] shadow-2xl overflow-hidden relative border border-slate-200">
-          {/* Blue Header Section */}
-          <div className="relative h-[240px] bg-white overflow-hidden">
-            <div className="absolute top-[-50px] left-[-50px] w-[450px] h-[350px] bg-gradient-to-br from-blue-600 to-blue-700 rounded-full opacity-90 transform -rotate-12 translate-y-[-50px]"></div>
-            <div className="absolute top-[-80px] right-[-80px] w-[200px] h-[200px] bg-white rounded-full opacity-100"></div>
-            
-            <div className="relative z-10 p-10 pt-16">
-              <h2 className="text-white text-xl font-bold opacity-90">Welcome Back,</h2>
-              <h1 className="text-white text-5xl font-black mt-1">Log In!</h1>
-            </div>
+      <div className="flex-1 flex items-start justify-center p-4 pt-20 sm:pt-32">
+        <div className="max-w-[500px] w-full bg-white border border-[#d3d3d3] rounded shadow-sm overflow-hidden">
+          {/* Header */}
+          <div className="bg-[#f3f3f3] border-b border-[#d3d3d3] py-2.5 px-4 text-center">
+            <h1 className="text-[#333] text-lg font-medium">Log in</h1>
           </div>
 
-          <div className="p-8 pt-0">
+          <div className="p-6 sm:p-10">
             {error && (
-              <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs text-center">
+              <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 rounded text-sm text-center">
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Input */}
-              <div className="relative">
-                <label className="absolute -top-2.5 left-4 bg-white px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">
-                  Email Address
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <label className="text-[#333] font-bold text-sm sm:w-28 shrink-0">
+                  User Email
                 </label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-slate-700 font-medium"
-                  placeholder="Jacob@gmail.com"
+                  className="w-full px-3 py-1.5 border border-[#ccc] rounded focus:outline-none focus:border-blue-400 text-[#333]"
                 />
               </div>
 
               {/* Password Input */}
-              <div className="relative">
-                <label className="absolute -top-2.5 left-4 bg-white px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider z-10">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <label className="text-[#333] font-bold text-sm sm:w-28 shrink-0">
                   Password
                 </label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-slate-700 font-medium"
-                    placeholder="••••••••"
-                  />
-                  <Lock className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-                </div>
-              </div>
-
-              {/* Remember Me */}
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setRememberMe(!rememberMe)}
-                  className="flex items-center gap-2 group"
-                >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${rememberMe ? 'bg-blue-600 border-blue-600' : 'border-slate-300'}`}>
-                    {rememberMe && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                  </div>
-                  <span className="text-sm font-semibold text-slate-500">Remember me</span>
-                </button>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-1.5 border border-[#ccc] rounded focus:outline-none focus:border-blue-400 text-[#333]"
+                />
               </div>
 
               {/* Login Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold rounded-[20px] transition-all shadow-xl shadow-blue-200 flex items-center justify-center disabled:opacity-50"
-              >
-                {loading ? (
-                  <Loader2 className="w-6 h-6 animate-spin" />
-                ) : (
-                  'Log in'
-                )}
-              </button>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="hidden sm:block sm:w-28 shrink-0" />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-[#428bca] hover:bg-[#3276b1] text-white px-4 py-1.5 rounded text-sm font-medium border border-[#357ebd] transition-colors disabled:opacity-50 flex items-center justify-center min-w-[80px]"
+                >
+                  {loading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    'Log in'
+                  )}
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
+      <PublicFooter />
+      <MobileBottomNav />
     </div>
   );
 }

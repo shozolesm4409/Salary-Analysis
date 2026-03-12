@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp, getDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, doc, orderBy, serverTimestamp, getDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 
 export interface IncrementRecord {
   id: string;
+  userId: string;
   sl?: number; // Serial number for display
   year: string;
   amount: number;
@@ -33,15 +34,27 @@ export function useIncrementRecords() {
     }
 
     // Active records
-    const q = query(collection(db, 'increment_records'), orderBy('timestamp', 'desc'));
+    const q = query(collection(db, 'increment_records'), where('userId', '==', user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map((doc, index) => ({
+      const data = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data(),
-        sl: snapshot.docs.length - index
+        ...doc.data()
       })) as IncrementRecord[];
       
-      setRecords(data);
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => {
+        const timeA = a.timestamp?.toMillis?.() || a.timestamp || 0;
+        const timeB = b.timestamp?.toMillis?.() || b.timestamp || 0;
+        return timeB - timeA;
+      });
+
+      // Add SL after sorting
+      const dataWithSl = data.map((item, index) => ({
+        ...item,
+        sl: data.length - index
+      }));
+      
+      setRecords(dataWithSl);
       setLoading(false);
     }, (err) => {
       console.error("Error fetching increment records:", err);
@@ -50,12 +63,14 @@ export function useIncrementRecords() {
     });
 
     // Deleted records
-    const qDeleted = query(collection(db, 'deleted_increment_records'), orderBy('deletedAt', 'desc'));
+    const qDeleted = query(collection(db, 'deleted_increment_records'), where('userId', '==', user.uid));
     const unsubDeleted = onSnapshot(qDeleted, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as IncrementRecord[];
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));
       setDeletedRecords(data);
     }, (err) => {
       console.error("Error fetching deleted increment records:", err);
@@ -67,10 +82,12 @@ export function useIncrementRecords() {
     };
   }, [user]);
 
-  const addRecord = async (record: Omit<IncrementRecord, 'id' | 'sl' | 'timestamp'>) => {
+  const addRecord = async (record: Omit<IncrementRecord, 'id' | 'sl' | 'timestamp' | 'userId'>) => {
     try {
+      if (!user) throw new Error("User not authenticated");
       await addDoc(collection(db, 'increment_records'), {
         ...record,
+        userId: user.uid,
         timestamp: serverTimestamp()
       });
       return { success: true, message: 'Record added successfully' };

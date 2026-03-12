@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDoc, setDoc, writeBatch } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc, getDoc, setDoc, writeBatch, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Transaction } from '@/types';
 import { useAuth } from '@/context/AuthContext';
@@ -21,12 +21,14 @@ export function useTransactions() {
     }
 
     // Active transactions
-    const q = query(collection(db, 'transactions'), orderBy('timestamp', 'desc'));
+    const q = query(collection(db, 'transactions'), where('userId', '==', user.uid));
     const unsubActive = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Transaction[];
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
       setTransactions(data);
       setLoading(false);
       setError(null);
@@ -41,12 +43,14 @@ export function useTransactions() {
     });
 
     // Deleted transactions
-    const qDeleted = query(collection(db, 'deleted_transactions'), orderBy('deletedAt', 'desc'));
+    const qDeleted = query(collection(db, 'deleted_transactions'), where('userId', '==', user.uid));
     const unsubDeleted = onSnapshot(qDeleted, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as Transaction[];
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));
       setDeletedTransactions(data);
     }, (error) => {
       console.error("Firestore deleted_transactions error:", error);
@@ -64,8 +68,12 @@ export function useTransactions() {
     };
   }, [user]);
 
-  const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
-    await addDoc(collection(db, 'transactions'), transaction);
+  const addTransaction = async (transaction: Omit<Transaction, 'id' | 'userId'>) => {
+    if (!user) return;
+    await addDoc(collection(db, 'transactions'), {
+      ...transaction,
+      userId: user.uid
+    });
   };
 
   const updateTransaction = async (id: string, data: Partial<Transaction>) => {
@@ -82,6 +90,7 @@ export function useTransactions() {
         // Move to deleted_transactions collection
         await addDoc(collection(db, 'deleted_transactions'), {
           ...data,
+          userId: user.uid,
           deletedAt: Date.now(),
           originalId: id
         });
@@ -102,10 +111,11 @@ export function useTransactions() {
       if (docSnap.exists()) {
         const { deletedAt, originalId, ...data } = docSnap.data() as any;
         // Restore to transactions
+        const restoredData = { ...data, userId: user.uid };
         if (originalId) {
-          await setDoc(doc(db, 'transactions', originalId), data);
+          await setDoc(doc(db, 'transactions', originalId), restoredData);
         } else {
-          await addDoc(collection(db, 'transactions'), data);
+          await addDoc(collection(db, 'transactions'), restoredData);
         }
         // Delete from deleted_transactions
         await deleteDoc(docRef);
@@ -150,10 +160,11 @@ export function useTransactions() {
   const deleteAllTransactions = async () => {
     try {
       const promises = transactions.map(async (t) => {
-        if (t.id) {
+        if (t.id && user) {
           // Move to deleted_transactions collection
           await addDoc(collection(db, 'deleted_transactions'), {
             ...t,
+            userId: user.uid,
             deletedAt: Date.now(),
             originalId: t.id
           });

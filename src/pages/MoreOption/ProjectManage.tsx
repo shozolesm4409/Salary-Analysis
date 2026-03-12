@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Project } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 import { Plus, Trash2, Edit2, Eye, EyeOff, Globe, Link as LinkIcon, Image as ImageIcon, X } from 'lucide-react';
 
 export default function ProjectManage() {
@@ -17,11 +18,15 @@ export default function ProjectManage() {
     isVisible: true,
     imageUrl: ''
   });
+  const { user } = useAuth();
 
   useEffect(() => {
-    const q = query(collection(db, 'projects'), orderBy('timestamp', 'desc'));
+    if (!user) return;
+    const q = query(collection(db, 'projects'), where('userId', '==', user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Project[];
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
       setProjects(data);
       setLoading(false);
     }, (error) => {
@@ -44,15 +49,18 @@ export default function ProjectManage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     try {
       if (editingProject?.id) {
         await updateDoc(doc(db, 'projects', editingProject.id), {
           ...formData,
+          userId: user.uid,
           timestamp: Date.now()
         });
       } else {
         await addDoc(collection(db, 'projects'), {
           ...formData,
+          userId: user.uid,
           timestamp: Date.now()
         });
       }
@@ -65,14 +73,18 @@ export default function ProjectManage() {
   };
 
   const handleDelete = async (id: string) => {
+    if (!user) return;
     if (confirm('Are you sure you want to delete this project?')) {
       await deleteDoc(doc(db, 'projects', id));
     }
   };
 
   const handleToggleVisibility = async (project: Project) => {
-    if (project.id) {
-      await updateDoc(doc(db, 'projects', project.id), { isVisible: !project.isVisible });
+    if (project.id && user) {
+      await updateDoc(doc(db, 'projects', project.id), { 
+        isVisible: !project.isVisible,
+        userId: user.uid 
+      });
     }
   };
 

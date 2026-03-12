@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, deleteDoc, doc, updateDoc, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ProfitRecord } from '@/types';
 import { useAuth } from '@/context/AuthContext';
@@ -17,12 +17,14 @@ export function useProfitRecords() {
       return;
     }
 
-    const q = query(collection(db, 'profit_records'), orderBy('timestamp', 'asc'));
+    const q = query(collection(db, 'profit_records'), where('userId', '==', user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       })) as ProfitRecord[];
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
       setRecords(data);
       setLoading(false);
     }, (err) => {
@@ -34,8 +36,9 @@ export function useProfitRecords() {
     return () => unsubscribe();
   }, [user]);
 
-  const addRecord = async (record: Omit<ProfitRecord, 'id'>) => {
-    await addDoc(collection(db, 'profit_records'), record);
+  const addRecord = async (record: Omit<ProfitRecord, 'id' | 'userId'>) => {
+    if (!user) return;
+    await addDoc(collection(db, 'profit_records'), { ...record, userId: user.uid });
   };
 
   const updateRecord = async (id: string, data: Partial<ProfitRecord>) => {

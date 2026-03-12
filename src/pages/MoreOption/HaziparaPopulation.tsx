@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, setDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, setDoc, deleteDoc, doc, onSnapshot, query, orderBy, writeBatch, where } from 'firebase/firestore';
 import { Edit2, Trash2, Plus, X, Download, Upload } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { useSettings } from '@/hooks/useSettings';
+import { useAuth } from '@/context/AuthContext';
 import html2pdf from 'html2pdf.js';
 
 interface PopulationData {
@@ -23,24 +24,29 @@ export default function HaziparaPopulation() {
 
   const [itemToDelete, setItemToDelete] = useState<PopulationData | null>(null);
   const { isButtonHidden } = useSettings();
+  const { user } = useAuth();
   const downloadRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const q = query(collection(db, 'hazipara_population'), orderBy('name'));
+    if (!user) return;
+    const q = query(collection(db, 'hazipara_population'), where('userId', '==', user.uid));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setData(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as PopulationData)));
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as PopulationData));
+      // Sort in-memory to avoid composite index requirement
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      setData(data);
     });
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   const handleSubmit = async () => {
     const mem = parseInt(members);
-    if (name && !isNaN(mem)) {
+    if (name && !isNaN(mem) && user) {
       if (editingId) {
-        await setDoc(doc(db, 'hazipara_population', editingId), { name, members: mem }, { merge: true });
+        await setDoc(doc(db, 'hazipara_population', editingId), { name, members: mem, userId: user.uid }, { merge: true });
         setEditingId(null);
       } else {
-        await addDoc(collection(db, 'hazipara_population'), { name, members: mem });
+        await addDoc(collection(db, 'hazipara_population'), { name, members: mem, userId: user.uid });
       }
       setName('');
       setMembers('');
@@ -94,10 +100,11 @@ export default function HaziparaPopulation() {
   };
 
   const confirmUpload = async () => {
+    if (!user) return;
     const batch = writeBatch(db);
     for (const item of previewData) {
       const docRef = doc(collection(db, 'hazipara_population'));
-      batch.set(docRef, item);
+      batch.set(docRef, { ...item, userId: user.uid });
     }
     await batch.commit();
     setPreviewData([]);

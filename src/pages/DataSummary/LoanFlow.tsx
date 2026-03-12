@@ -16,7 +16,7 @@ import {
   Award
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 
@@ -68,8 +68,10 @@ export default function LoanFlow() {
   // Fetch all schedules and settings on mount
   useEffect(() => {
     const fetchData = async () => {
+      if (!user) return;
       try {
-        const querySnapshot = await getDocs(collection(db, 'loan_schedules'));
+        const q = query(collection(db, 'loan_schedules'), where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
         const schedules: Record<string, LoanScheduleRow[]> = {};
         const settings: Record<string, CustomSettings> = {};
         querySnapshot.forEach((doc) => {
@@ -241,6 +243,7 @@ export default function LoanFlow() {
         ...existingData,
         department: selectedLoan.department,
         customSettings: currentSettings,
+        userId: user.uid,
         updatedAt: Date.now(),
         updatedBy: user.uid
       }, { merge: true });
@@ -270,6 +273,7 @@ export default function LoanFlow() {
       await setDoc(docRef, {
         department: selectedLoan.department,
         rows: scheduleRows,
+        userId: user.uid,
         updatedAt: Date.now(),
         updatedBy: user.uid
       });

@@ -341,7 +341,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </button>
             <Link to="/" className="flex items-center">
               <Wallet className="w-8 h-8 text-blue-600 mr-2" />
-              <span className="text-xl font-bold text-slate-800">FinDash</span>
+              <span className="text-xl font-bold text-slate-800">Salary Analytics</span>
             </Link>
           </div>
 

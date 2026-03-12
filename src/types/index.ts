@@ -1,5 +1,6 @@
 export interface Transaction {
   id?: string;
+  userId: string;
   type: 'income' | 'expense';
   date: string; // ISO string YYYY-MM-DD
   category: string;
@@ -13,6 +14,7 @@ export interface Transaction {
 
 export interface Category {
   id?: string;
+  userId: string;
   name: string;
   type: 'income' | 'expense' | 'both';
   hidden: boolean;
@@ -20,6 +22,7 @@ export interface Category {
 
 export interface Department {
   id?: string;
+  userId: string;
   name: string;
   type: 'income' | 'expense' | 'both';
   hidden: boolean;
@@ -29,6 +32,7 @@ export const DEPARTMENTS = ['HR', 'IT', 'Finance', 'Marketing', 'Operations', 'S
 export const INCOME_TYPES = ['Salary', 'Freelance', 'Investment', 'Sales', 'Other'];
 export interface Project {
   id?: string;
+  userId: string;
   heading: string;
   webLink: string;
   description: string;
@@ -40,6 +44,7 @@ export interface Project {
 
 export interface ProfitRecord {
   id?: string;
+  userId: string;
   year: string;
   months: number;
   present: number;

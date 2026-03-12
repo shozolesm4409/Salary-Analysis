@@ -9,6 +9,7 @@ import TMIEPDFFilter from '@/pages/DataSummary/TMIEPDFFilter';
 import Calculation from '@/pages/MoreOption/Calculation';
 import ProjectList from './ProjectList';
 import Formula from '@/pages/Formula/Formula';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 export default function LandingPage() {
   const { user } = useAuth();
@@ -94,52 +95,7 @@ export default function LandingPage() {
 
       <PublicFooter onNavClick={setActiveView} />
 
-      {/* Mobile Bottom Navigation (Sticky) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div className="flex justify-around items-center h-16">
-          <button 
-            onClick={() => setActiveView('transaction')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'transaction' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            <div className={`w-10 h-10 ${activeView === 'transaction' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-500'} rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-white transition-colors`}>
-              <ArrowRight className="w-5 h-5 rotate-[-45deg]" />
-            </div>
-            <span className="text-[10px] font-medium">Add Txn</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveView('filter')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'filter' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            <Filter className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Filter</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveView('calculation')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'calculation' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            <Calculator className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Calculate</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveView('project')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'project' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            <Briefcase className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Project</span>
-          </button>
-
-          <button 
-            onClick={() => setActiveView('formula')}
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${activeView === 'formula' ? 'text-blue-600' : 'text-slate-500 hover:text-slate-700'}`}
-          >
-            <FunctionSquare className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Formula</span>
-          </button>
-        </div>
-      </div>
+      <MobileBottomNav activeView={activeView} onNavClick={setActiveView} />
     </div>
   );
 }

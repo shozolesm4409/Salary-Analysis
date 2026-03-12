@@ -281,7 +281,7 @@ export default function DSMDashboard() {
                   const available = inc - exp;
                   
                   return (
-                    <div key={mStr} className="bg-white hover:bg-slate-50 transition-colors group sm:px-3 sm:py-1 flex flex-col sm:grid sm:grid-cols-4 sm:items-center gap-4">
+                    <div key={mStr} className="bg-white hover:bg-slate-50 transition-colors group px-4 py-3 sm:px-3 sm:py-1 flex flex-col sm:grid sm:grid-cols-4 sm:items-center gap-4">
                       <div className="flex items-center justify-between sm:justify-start gap-3">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm shrink-0">

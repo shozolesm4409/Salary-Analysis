@@ -12,7 +12,8 @@ import {
   ArrowDownRight,
   Wallet,
   Plus,
-  Download
+  Download,
+  Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -118,6 +119,8 @@ export default function Dashboard() {
   const overallPaidBankLoan = filteredTransactions.filter(t => t.category === 'Bank Loan' && t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
   const overallDueBankLoan = overallBankLoan - overallPaidBankLoan;
   const overallHomeExpense = filteredTransactions.filter(t => t.category === 'Home Expense').reduce((sum, t) => sum + t.amount, 0);
+  const overallSalary = filteredTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
+  const currentMonthSalary = currentMonthTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
 
   let monthsToDisplay: Date[] = [];
   if (selectedYear === 'All') {
@@ -144,12 +147,14 @@ export default function Dashboard() {
     const monthTransactions = filteredTransactions.filter(t => t.month === monthStr);
     const income = monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const expense = monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const salary = monthTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
     return {
       month: monthStr,
       monthName: selectedYear === 'All' ? format(month, 'MMM yy') : format(month, 'MMM'),
       fullMonthName: selectedYear === 'All' ? format(month, 'MMMM yyyy') : format(month, 'MMMM'),
       income,
       expense,
+      salary,
       available: income - expense
     };
   });
@@ -292,6 +297,62 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Salary Analytics Section */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <Activity className="w-5 h-5 text-blue-600" />
+          <h2 className="text-lg font-bold text-slate-900">Salary Analytics</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 rounded-xl shadow-md text-white">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-blue-100">Monthly Salary</p>
+              <DollarSign className="w-5 h-5 text-blue-200" />
+            </div>
+            <p className="text-2xl font-bold">৳ {currentMonthSalary.toLocaleString()}</p>
+            <p className="text-xs text-blue-200 mt-1">For {format(new Date(), 'MMMM yyyy')}</p>
+          </div>
+          
+          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-4 rounded-xl shadow-md text-white">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-emerald-100">Yearly Salary</p>
+              <TrendingUp className="w-5 h-5 text-emerald-200" />
+            </div>
+            <p className="text-2xl font-bold">৳ {overallSalary.toLocaleString()}</p>
+            <p className="text-xs text-emerald-200 mt-1">For {selectedYear === 'All' ? 'All Time' : selectedYear}</p>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 lg:col-span-2">
+            <h3 className="text-sm font-bold text-slate-900 mb-3">Salary Trend ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
+            <div className="h-24">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlySummary}>
+                  <defs>
+                    <linearGradient id="colorSalary" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <Area 
+                    type="monotone" 
+                    dataKey="salary" 
+                    stroke="#3b82f6" 
+                    strokeWidth={2}
+                    fillOpacity={1} 
+                    fill="url(#colorSalary)" 
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
+                    formatter={(value: number) => `৳ ${value.toLocaleString()}`}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Financial Flow Bar Chart */}
@@ -330,7 +391,7 @@ export default function Dashboard() {
                 {monthlySummary.map((m) => {
                   const monthDate = parseISO(`${m.month}-01`);
                   return (
-                    <div key={m.month} className="hover:bg-slate-50 transition-colors group sm:px-3 sm:py-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+                    <div key={m.month} className="hover:bg-slate-50 transition-colors group px-4 py-3 sm:px-3 sm:py-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
                       <div className="flex items-center justify-between sm:w-48 shrink-0">
                         <div>
                           <div className="font-bold text-slate-900 text-base">{format(monthDate, 'MMMM')}</div>

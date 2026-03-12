@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 import { Trash2, Plus, Save, Edit2, EyeOff, X, Copy } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 interface Formula {
   id?: string;
@@ -17,13 +18,18 @@ export default function FormulaManage() {
   const [name, setName] = useState('');
   const [expression, setExpression] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchFormulas();
-  }, []);
+    if (user) {
+      fetchFormulas();
+    }
+  }, [user]);
 
   const fetchFormulas = async () => {
-    const querySnapshot = await getDocs(collection(db, 'formulas'));
+    if (!user) return;
+    const q = query(collection(db, 'formulas'), where('userId', '==', user.uid));
+    const querySnapshot = await getDocs(q);
     const formulasData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Formula));
     setFormulas(formulasData);
   };
@@ -35,11 +41,11 @@ export default function FormulaManage() {
   };
 
   const handleSave = async () => {
-    if (!name || !expression) return;
+    if (!name || !expression || !user) return;
     if (editingFormula) {
-      await updateDoc(doc(db, 'formulas', editingFormula.id!), { name, expression });
+      await updateDoc(doc(db, 'formulas', editingFormula.id!), { name, expression, userId: user.uid });
     } else {
-      await addDoc(collection(db, 'formulas'), { name, expression, hidden: false });
+      await addDoc(collection(db, 'formulas'), { name, expression, hidden: false, userId: user.uid });
     }
     setName('');
     setExpression('');

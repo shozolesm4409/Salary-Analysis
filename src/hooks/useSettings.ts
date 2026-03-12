@@ -58,11 +58,9 @@ export function useSettings() {
       ];
 
       const existingIds = new Set(data.map(s => s.id));
-      let hasMissing = false;
 
       defaultSettings.forEach(setting => {
         if (!existingIds.has(setting.id)) {
-          hasMissing = true;
           // Only try to initialize if user is authenticated, otherwise just use defaults locally
           if (user) {
             setDoc(doc(db, 'landing_settings', setting.id), setting).catch(err => {
@@ -72,10 +70,13 @@ export function useSettings() {
         }
       });
 
-      if (!hasMissing || !user) {
-        setLandingSettings(data);
-        setLoading(false);
-      }
+      const mergedData = defaultSettings.map(defaultSetting => {
+        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
+        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      });
+
+      setLandingSettings(mergedData);
+      setLoading(false);
     }, (error) => {
       console.warn("Firestore landing_settings error (using defaults):", error.message);
       const defaultSettings: LandingSetting[] = [
@@ -159,20 +160,21 @@ export function useSettings() {
 
       // Ensure all default settings exist in Firestore
       const existingIds = new Set(data.map(s => s.id));
-      let hasMissing = false;
 
       defaultSettings.forEach(setting => {
         if (!existingIds.has(setting.id)) {
-          hasMissing = true;
           setDoc(doc(db, 'table_settings', setting.id), setting).catch(err => {
             console.warn(`Could not initialize table setting ${setting.id} in Firestore:`, err.message);
           });
         }
       });
 
-      if (!hasMissing) {
-        setTableSettings(data);
-      }
+      const mergedData = defaultSettings.map(defaultSetting => {
+        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
+        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      });
+
+      setTableSettings(mergedData);
     }, (error) => {
       console.warn("Firestore table_settings error (using defaults):", error.message);
       
@@ -213,20 +215,21 @@ export function useSettings() {
       ];
 
       const existingIds = new Set(data.map(s => s.id));
-      let hasMissing = false;
 
       defaultSettings.forEach(setting => {
         if (!existingIds.has(setting.id)) {
-          hasMissing = true;
           setDoc(doc(db, 'button_settings', setting.id), setting).catch(err => {
             console.warn(`Could not initialize button setting ${setting.id} in Firestore:`, err.message);
           });
         }
       });
 
-      if (!hasMissing) {
-        setButtonSettings(data);
-      }
+      const mergedData = defaultSettings.map(defaultSetting => {
+        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
+        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      });
+
+      setButtonSettings(mergedData);
     }, (error) => {
       console.warn("Firestore button_settings error (using defaults):", error.message);
       const defaultSettings: ButtonSetting[] = [
@@ -255,20 +258,21 @@ export function useSettings() {
       ];
 
       const existingIds = new Set(data.map(s => s.id));
-      let hasMissing = false;
 
       defaultSettings.forEach(setting => {
         if (!existingIds.has(setting.id)) {
-          hasMissing = true;
           setDoc(doc(db, 'action_settings', setting.id), setting).catch(err => {
             console.warn(`Could not initialize action setting ${setting.id} in Firestore:`, err.message);
           });
         }
       });
 
-      if (!hasMissing) {
-        setActionSettings(data);
-      }
+      const mergedData = defaultSettings.map(defaultSetting => {
+        const found = data.find(s => s.id === defaultSetting.id || s.name === defaultSetting.name);
+        return found ? { ...defaultSetting, isHidden: found.isHidden, id: found.id } : defaultSetting;
+      });
+
+      setActionSettings(mergedData);
     }, (error) => {
       console.warn("Firestore action_settings error (using defaults):", error.message);
       const defaultSettings: ActionSetting[] = [
