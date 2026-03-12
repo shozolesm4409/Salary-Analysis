@@ -122,6 +122,15 @@ export default function Dashboard() {
   const overallSalary = filteredTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
   const currentMonthSalary = currentMonthTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
 
+  const today = format(new Date(), 'yyyy-MM-dd');
+  const todayTransactions = transactions.filter(t => t.date === today);
+  const todayIncome = todayTransactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+  const todayExpense = todayTransactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
   let monthsToDisplay: Date[] = [];
   if (selectedYear === 'All') {
     if (transactions.length > 0) {
@@ -304,26 +313,44 @@ export default function Dashboard() {
           <h2 className="text-lg font-bold text-slate-900">Salary Analytics</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 rounded-xl shadow-md text-white">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-2">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-blue-100">Monthly Salary</p>
+              <p className="text-sm font-medium text-blue-100">Monthly Income</p>
               <DollarSign className="w-5 h-5 text-blue-200" />
             </div>
-            <p className="text-2xl font-bold">৳ {currentMonthSalary.toLocaleString()}</p>
+            <p className="text-2xl font-bold">৳ {totalIncome.toLocaleString()}</p>
             <p className="text-xs text-blue-200 mt-1">For {format(new Date(), 'MMMM yyyy')}</p>
           </div>
           
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-4 rounded-xl shadow-md text-white">
+          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm font-medium text-emerald-100">Yearly Salary</p>
+              <p className="text-sm font-medium text-emerald-100">Yearly Income</p>
               <TrendingUp className="w-5 h-5 text-emerald-200" />
             </div>
-            <p className="text-2xl font-bold">৳ {overallSalary.toLocaleString()}</p>
+            <p className="text-2xl font-bold">৳ {yearlyIncome.toLocaleString()}</p>
             <p className="text-xs text-emerald-200 mt-1">For {selectedYear === 'All' ? 'All Time' : selectedYear}</p>
           </div>
 
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 lg:col-span-2">
+          <div className="bg-gradient-to-br from-green-600 to-emerald-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-green-100">Today Income</p>
+              <ArrowUpRight className="w-5 h-5 text-green-200" />
+            </div>
+            <p className="text-2xl font-bold">৳ {todayIncome.toLocaleString()}</p>
+            <p className="text-xs text-green-200 mt-1">For {format(new Date(), 'dd MMM yyyy')}</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-rose-600 to-pink-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm font-medium text-rose-100">Today Expenses</p>
+              <ArrowDownRight className="w-5 h-5 text-rose-200" />
+            </div>
+            <p className="text-2xl font-bold">৳ {todayExpense.toLocaleString()}</p>
+            <p className="text-xs text-rose-200 mt-1">For {format(new Date(), 'dd MMM yyyy')}</p>
+          </div>
+
+          <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 col-span-2 lg:col-span-4">
             <h3 className="text-sm font-bold text-slate-900 mb-3">Salary Trend ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
             <div className="h-24">
               <ResponsiveContainer width="100%" height="100%">
