@@ -109,6 +109,26 @@ export default function Dashboard() {
 
   const incrementPieData = Object.entries(incrementByYear).map(([name, value]) => ({ name, value }));
 
+  // Loan Summary Data
+  const loanTakenByDept = filteredTransactions
+    .filter(t => t.category === 'Bank Loan' && t.type === 'income')
+    .reduce((acc, t) => {
+      acc[t.department] = (acc[t.department] || 0) + t.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+  const loanPieData = Object.entries(loanTakenByDept).map(([name, value]) => ({ name, value }));
+
+  // Taken Summary Data
+  const takenByDept = filteredTransactions
+    .filter(t => t.category.toLowerCase() === 'taken')
+    .reduce((acc, t) => {
+      acc[t.department] = (acc[t.department] || 0) + t.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+  const takenPieData = Object.entries(takenByDept).map(([name, value]) => ({ name, value }));
+
   const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316'];
 
   const overallIncome = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
@@ -141,6 +161,8 @@ export default function Dashboard() {
     const income = monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const expense = monthTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const salary = monthTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
+    const loanTaken = monthTransactions.filter(t => t.category === 'Bank Loan' && t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const loanPaid = monthTransactions.filter(t => t.category === 'Bank Loan' && t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     return {
       month: monthStr,
       monthName: selectedYear === 'All' ? format(month, 'MMM yy') : format(month, 'MMM'),
@@ -148,6 +170,8 @@ export default function Dashboard() {
       income,
       expense,
       salary,
+      loanTaken,
+      loanPaid,
       available: income - expense
     };
   });
@@ -580,6 +604,27 @@ export default function Dashboard() {
                   name="Income Trend"
                 />
               </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Loan Flow Bar Chart */}
+        <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
+          <h3 className="text-lg font-bold text-slate-900 mb-6">Loan Flow (Taken vs Paid)</h3>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlySummary}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="monthName" axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: number) => `৳ ${value.toLocaleString()}`}
+                />
+                <Legend />
+                <Bar dataKey="loanTaken" fill="#ef4444" radius={[4, 4, 0, 0]} name="Loan Taken" />
+                <Bar dataKey="loanPaid" fill="#10b981" radius={[4, 4, 0, 0]} name="Loan Paid" />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
