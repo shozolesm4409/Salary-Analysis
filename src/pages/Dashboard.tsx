@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useIncrementRecords } from '@/hooks/useIncrementRecords';
 import { useSettings } from '@/hooks/useSettings';
@@ -13,7 +14,8 @@ import {
   Wallet,
   Plus,
   Download,
-  Activity
+  Activity,
+  ExternalLink
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -316,9 +318,18 @@ export default function Dashboard() {
 
       {/* Salary Analytics Section */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <Activity className="w-5 h-5 text-blue-600" />
-          <h2 className="text-lg font-bold text-slate-900">Salary Analytics</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Activity className="w-5 h-5 text-blue-600" />
+            <h2 className="text-lg font-bold text-slate-900">Salary Analytics</h2>
+          </div>
+          <Link 
+            to="/dsm-dashboard" 
+            state={{ activeTab: 'dbp' }}
+            className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+          >
+            Dashboard<ExternalLink className="w-3 h-3 ml-1" />
+          </Link>
         </div>
         
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-2">
@@ -392,7 +403,16 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Financial Flow Bar Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100 lg:col-span-2">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Monthly Financial Flow ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Monthly Financial Flow ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
+            <Link 
+              to="/dsm-dashboard" 
+              state={{ activeTab: 'sdbp' }}
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              Dashboard<ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlySummary}>
@@ -401,7 +421,7 @@ export default function Dashboard() {
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: number) => `$${value.toLocaleString()}`}
+                  formatter={(value: number) => `৳ ${value.toLocaleString()}`}
                   labelFormatter={(label, payload) => payload[0]?.payload?.fullMonthName || label}
                 />
                 <Legend verticalAlign="top" align="left" height={36}/>
@@ -478,7 +498,16 @@ export default function Dashboard() {
 
         {/* Category Expense Pie Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Category-wise Expenses</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Category-wise Expenses</h3>
+            <Link 
+              to="/categories-summary" 
+              state={{ activeTab: 'expense' }}
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              Expense<ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -496,7 +525,7 @@ export default function Dashboard() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                <Tooltip formatter={(value: number) => `৳ ${value.toLocaleString()}`} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -505,7 +534,16 @@ export default function Dashboard() {
 
         {/* Category Income Pie Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Category-wise Income</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Category-wise Income</h3>
+            <Link 
+              to="/categories-summary" 
+              state={{ activeTab: 'income' }}
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              Income<ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -523,7 +561,7 @@ export default function Dashboard() {
                     <Cell key={`cell-${index}`} fill={COLORS[(index + 2) % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                <Tooltip formatter={(value: number) => `৳ ${value.toLocaleString()}`} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -532,7 +570,15 @@ export default function Dashboard() {
 
         {/* Increment Record Pie Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Increment Record (Year vs Amount)</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Increment (Year vs Amount)</h3>
+            <Link 
+              to="/increment-record" 
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              View<ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -550,7 +596,7 @@ export default function Dashboard() {
                     <Cell key={`cell-${index}`} fill={COLORS[(index + 4) % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                <Tooltip formatter={(value: number) => `৳ ${value.toLocaleString()}`} />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -559,7 +605,16 @@ export default function Dashboard() {
 
         {/* Income vs Expense Bar Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Income vs Expense (Last 6 Months)</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Income vs Expense (Last 6 Months)</h3>
+            <Link 
+              to="/iesd-summary" 
+              state={{ activeTab: 'income' }}
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              Summary <ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
@@ -568,6 +623,7 @@ export default function Dashboard() {
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b' }} />
                 <Tooltip 
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                  formatter={(value: number) => `৳ ${value.toLocaleString()}`}
                 />
                 <Bar dataKey="income" fill="#10b981" radius={[4, 4, 0, 0]} name="Income" />
                 <Bar dataKey="expense" fill="#ef4444" radius={[4, 4, 0, 0]} name="Expense" />
@@ -610,7 +666,15 @@ export default function Dashboard() {
 
         {/* Loan Flow Bar Chart */}
         <div className="bg-white p-3 rounded-l shadow-sm border border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900 mb-6">Loan Flow (Taken vs Paid)</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-bold text-slate-900">Loan Flow (Taken vs Paid)</h3>
+            <Link 
+              to="/loan-flow" 
+              className="inline-flex items-center px-2 py-1 text-[10px] font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 rounded transition-colors border border-blue-200"
+            >
+              Details <ExternalLink className="w-3 h-3 ml-1" />
+            </Link>
+          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlySummary}>
