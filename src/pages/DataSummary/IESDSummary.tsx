@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
 import { useProfitRecords } from '@/hooks/useProfitRecords';
 import { cn } from '@/lib/utils';
+import { useLocation } from 'react-router-dom';
 import Income from './iesd-summary/Income';
 import Expenses from './iesd-summary/Expenses';
 import Saving from './iesd-summary/Saving';
@@ -14,7 +15,14 @@ export default function IESDSummary() {
   const { transactions, loading: transactionsLoading } = useTransactions();
   const { records: profitRecords, loading: profitLoading } = useProfitRecords();
   const { isTableHidden } = useSettings();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<TabType>('income');
+
+  useEffect(() => {
+    if (location.state && (location.state as any).activeTab) {
+      setActiveTab((location.state as any).activeTab);
+    }
+  }, [location.state]);
   const [showSummary, setShowSummary] = useState(false);
   const [showProfit, setShowProfit] = useState(false);
   const [showHistory, setShowHistory] = useState(false);

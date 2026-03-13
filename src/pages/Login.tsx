@@ -41,7 +41,7 @@ export default function Login() {
             <h1 className="text-[#333] text-lg font-medium">Log in</h1>
           </div>
 
-          <div className="p-6 sm:p-10">
+          <div className="p-4 sm:p-6">
             {error && (
               <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 rounded text-sm text-center">
                 {error}

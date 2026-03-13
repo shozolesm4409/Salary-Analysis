@@ -15,7 +15,13 @@ import {
   Plus,
   Download,
   Activity,
-  ExternalLink
+  ExternalLink,
+  PiggyBank,
+  Landmark,
+  CheckCircle2,
+  AlertCircle,
+  Home,
+  Scale
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { 
@@ -140,7 +146,7 @@ export default function Dashboard() {
   const overallBankLoan = filteredTransactions.filter(t => t.category === 'Bank Loan' && t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
   const overallPaidBankLoan = filteredTransactions.filter(t => t.category === 'Bank Loan' && t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
   const overallDueBankLoan = overallBankLoan - overallPaidBankLoan;
-  const overallHomeExpense = filteredTransactions.filter(t => t.category === 'Home Expense').reduce((sum, t) => sum + t.amount, 0);
+  const overallHomeExpense = filteredTransactions.filter(t => t.category === 'Home').reduce((sum, t) => sum + t.amount, 0);
   const overallSalary = filteredTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
   const currentMonthSalary = currentMonthTransactions.filter(t => t.category === 'Salary').reduce((sum, t) => sum + t.amount, 0);
 
@@ -270,49 +276,97 @@ export default function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3">
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Total Income</p>
-          <p className="text-xl font-bold text-emerald-600">{overallIncome.toLocaleString()}</p>
+        {/* Total Income */}
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <TrendingUp className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Total Income</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallIncome.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Total Expenses</p>
-          <p className="text-xl font-bold text-red-600">{overallExpense.toLocaleString()}</p>
+
+        {/* Total Expenses */}
+        <div className="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <TrendingDown className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-rose-50 uppercase tracking-tight">Total Expenses</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallExpense.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Net Balance</p>
-          <p className={`text-xl font-bold ${overallAvailable >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-            {overallAvailable.toLocaleString()}
-          </p>
+
+        {/* Net Balance */}
+        <div className={cn(
+          "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]",
+          overallAvailable >= 0 ? "bg-gradient-to-br from-blue-500 to-indigo-600" : "bg-gradient-to-br from-rose-500 to-pink-600"
+        )}>
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <Wallet className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-blue-50 uppercase tracking-tight">Net Balance</p>
+            <p className="text-lg font-black text-white leading-none mt-1">
+              ৳{overallAvailable.toLocaleString()}
+            </p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Saving</p>
-          <p className="text-xl font-bold text-amber-600">
-            {overallSaving.toLocaleString()}
-          </p>
+
+        {/* Saving */}
+        <div className="bg-gradient-to-br from-amber-400 to-orange-500 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <PiggyBank className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-amber-50 uppercase tracking-tight">Saving</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallSaving.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Bank Loan</p>
-          <p className="text-xl font-bold text-blue-600">
-            {overallBankLoan.toLocaleString()}
-          </p>
+
+        {/* Bank Loan */}
+        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <Landmark className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-indigo-50 uppercase tracking-tight">Bank Loan</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallBankLoan.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Paid Loan</p>
-          <p className="text-xl font-bold text-green-600">
-            {overallPaidBankLoan.toLocaleString()}
-          </p>
+
+        {/* Paid Loan */}
+        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-cyan-50 uppercase tracking-tight">Paid Loan</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallPaidBankLoan.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Due Loan</p>
-          <p className="text-xl font-bold text-orange-600">
-            {overallDueBankLoan.toLocaleString()}
-          </p>
+
+        {/* Due Loan */}
+        <div className="bg-gradient-to-br from-orange-400 to-red-500 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <AlertCircle className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-orange-50 uppercase tracking-tight">Due Loan</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallDueBankLoan.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 text-center">
-          <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Home Expense</p>
-          <p className="text-xl font-bold text-indigo-600">
-            {overallHomeExpense.toLocaleString()}
-          </p>
+
+        {/* Home Expense */}
+        <div className="bg-gradient-to-br from-violet-500 to-purple-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <Home className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-violet-50 uppercase tracking-tight">Home Expense</p>
+            <p className="text-lg font-black text-white leading-none mt-1">৳{overallHomeExpense.toLocaleString()}</p>
+          </div>
         </div>
       </div>
 
@@ -342,13 +396,13 @@ export default function Dashboard() {
             <p className="text-[10px] text-blue-200 mt-0.5">For {format(new Date(), 'MMMM yyyy')}</p>
           </div>
           
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
+          <div className="bg-gradient-to-br from-rose-600 to-pink-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-sm font-medium text-emerald-100">Yearly Income</p>
-              <TrendingUp className="w-4 h-4 text-emerald-200" />
+              <p className="text-sm font-medium text-rose-100">Monthly Expenses</p>
+              <TrendingDown className="w-4 h-4 text-rose-200" />
             </div>
-            <p className="text-xl font-bold">৳ {yearlyIncome.toLocaleString()}</p>
-            <p className="text-[10px] text-emerald-200 mt-0.5">For {selectedYear === 'All' ? 'All Time' : selectedYear}</p>
+            <p className="text-xl font-bold">৳ {totalExpense.toLocaleString()}</p>
+            <p className="text-[10px] text-rose-200 mt-0.5">For {format(new Date(), 'MMMM yyyy')}</p>
           </div>
 
           <div className="bg-gradient-to-br from-green-600 to-emerald-700 p-2 rounded-l shadow-md text-white lg:col-span-2">

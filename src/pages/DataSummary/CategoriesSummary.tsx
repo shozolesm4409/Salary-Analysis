@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { Transaction } from '@/types';
 import { format } from 'date-fns';
 import { Eye, X, FileText } from 'lucide-react';
 import { useSettings } from '@/hooks/useSettings';
+import { useLocation } from 'react-router-dom';
 
 interface CategorySummaryRow {
   id: string; // unique id for the row (category + type)
@@ -16,9 +17,16 @@ interface CategorySummaryRow {
 export default function CategoriesSummary() {
   const { transactions, loading } = useTransactions();
   const { isTableHidden, isActionHidden } = useSettings();
+  const location = useLocation();
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'income' | 'expense'>('income');
+
+  useEffect(() => {
+    if (location.state && (location.state as any).activeTab) {
+      setActiveTab((location.state as any).activeTab);
+    }
+  }, [location.state]);
 
   const categoryData = useMemo(() => {
     const grouped = transactions.reduce((acc, curr) => {

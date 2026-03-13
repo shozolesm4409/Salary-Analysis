@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
 import { format, isToday, parseISO, startOfMonth, endOfMonth, isWithinInterval, differenceInMonths } from 'date-fns';
+import { useLocation } from 'react-router-dom';
 import { 
   Coins, 
   Wallet, 
@@ -28,7 +29,15 @@ type Tab = 'dbp' | 'sdbp';
 export default function DSMDashboard() {
   const { transactions, loading } = useTransactions();
   const { isTableHidden } = useSettings();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<Tab>('dbp');
+
+  useEffect(() => {
+    if (location.state && (location.state as any).activeTab) {
+      setActiveTab((location.state as any).activeTab);
+    }
+  }, [location.state]);
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMonthlySummary, setShowMonthlySummary] = useState(false);
   const [showSalarySummary, setShowSalarySummary] = useState(false);
