@@ -149,15 +149,25 @@ export default function TakenSummary() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         {activeTab === 'taken_given' ? (
           <>
+            <div className="bg-gradient-to-br from-slate-600 to-slate-800 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <FileText className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-slate-100 uppercase tracking-tight">Total Taken</p>
+                <p className="text-lg font-black leading-none mt-1">{takenGivenData.length}</p>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
                 <ArrowUpRight className="w-5 h-5 text-white" />
               </div>
               <div className="text-left">
-                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Total Taken</p>
+                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Taken Amount</p>
                 <p className="text-lg font-black leading-none mt-1">{totalTaken.toLocaleString()}</p>
               </div>
             </div>
@@ -173,7 +183,7 @@ export default function TakenSummary() {
             </div>
 
             <div className={cn(
-              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white col-span-2 md:col-span-1",
+              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white",
               totalTakenDue > 0 ? "bg-gradient-to-br from-rose-500 to-pink-600" : totalTakenDue < 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600" : "bg-gradient-to-br from-slate-600 to-slate-700"
             )}>
               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
@@ -187,12 +197,22 @@ export default function TakenSummary() {
           </>
         ) : (
           <>
+            <div className="bg-gradient-to-br from-slate-600 to-slate-800 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <FileText className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-slate-100 uppercase tracking-tight">Total Lend</p>
+                <p className="text-lg font-black leading-none mt-1">{lendGiveBackData.length}</p>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <div className="text-left">
-                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Total Lend</p>
+                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Lend Amount</p>
                 <p className="text-lg font-black leading-none mt-1">{totalLend.toLocaleString()}</p>
               </div>
             </div>
@@ -208,7 +228,7 @@ export default function TakenSummary() {
             </div>
 
             <div className={cn(
-              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white col-span-2 md:col-span-1",
+              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white",
               totalLendDue > 0 ? "bg-gradient-to-br from-rose-500 to-pink-600" : totalLendDue < 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600" : "bg-gradient-to-br from-slate-600 to-slate-700"
             )}>
               <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
