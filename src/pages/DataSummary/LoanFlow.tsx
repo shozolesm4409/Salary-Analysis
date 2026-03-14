@@ -20,7 +20,7 @@ import {
   LayoutDashboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { doc, getDoc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, getDocs, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -49,6 +49,7 @@ interface LoanScheduleRow {
 interface CustomSettings {
   pLoanAmount: number;
   loanLent: number;
+  lockMonths?: boolean;
 }
 
 export default function LoanFlow() {
@@ -68,32 +69,38 @@ export default function LoanFlow() {
   // Custom Settings State
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [customSettings, setCustomSettings] = useState<Record<string, CustomSettings>>({});
-  const [currentSettings, setCurrentSettings] = useState<CustomSettings>({ pLoanAmount: 0, loanLent: 0 });
+  const [currentSettings, setCurrentSettings] = useState<CustomSettings>({ pLoanAmount: 0, loanLent: 0, lockMonths: false });
+  const [loanStatuses, setLoanStatuses] = useState<Record<string, string>>({});
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-  // Fetch all schedules and settings on mount
+  // Fetch all schedules and settings in real-time
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user) return;
-      try {
-        const q = query(collection(db, 'loan_schedules'));
-        const querySnapshot = await getDocs(q);
-        const schedules: Record<string, LoanScheduleRow[]> = {};
-        const settings: Record<string, CustomSettings> = {};
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.department) {
-            if (data.rows) schedules[data.department] = data.rows;
-            if (data.customSettings) settings[data.department] = data.customSettings;
-          }
-        });
-        setAllSchedules(schedules);
-        setCustomSettings(settings);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+    if (!user) return;
+
+    const q = query(collection(db, 'loan_schedules'));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const schedules: Record<string, LoanScheduleRow[]> = {};
+      const settings: Record<string, CustomSettings> = {};
+      const statuses: Record<string, string> = {};
+      
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.department) {
+          if (data.rows) schedules[data.department] = data.rows;
+          if (data.customSettings) settings[data.department] = data.customSettings;
+          if (data.status) statuses[data.department] = data.status;
+        }
+      });
+      
+      setAllSchedules(schedules);
+      setCustomSettings(settings);
+      setLoanStatuses(statuses);
+    }, (error) => {
+      console.error("Error listening to loan schedules:", error);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   // Group transactions by category to form the main table
   const loanData = useMemo(() => {
@@ -138,6 +145,7 @@ export default function LoanFlow() {
 
       // T.Paid Amount: Loan Lent * P.loan Amount
       const totalPaidAmount = loanLent * pLoanAmount;
+      const status = loanStatuses[department] || 'Pending';
 
       return {
         id: index + 1,
@@ -149,7 +157,8 @@ export default function LoanFlow() {
         loanLent,
         pLoanAmount,
         totalPaidAmount,
-        isBkashL
+        isBkashL,
+        status
       };
     }).filter(item => 
       `Bank Loan - ${item.department}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -182,15 +191,34 @@ export default function LoanFlow() {
     return `bank_loan_${safeDept}`;
   };
 
+  const handleStatusChange = async (department: string, newStatus: string) => {
+    if (!user) return;
+    setIsUpdatingStatus(true);
+    try {
+      const docId = getScheduleDocId(department);
+      const docRef = doc(db, 'loan_schedules', docId);
+      await setDoc(docRef, { 
+        status: newStatus,
+        updatedAt: Date.now(),
+        updatedBy: user.uid
+      }, { merge: true });
+      
+      setLoanStatuses(prev => ({ ...prev, [department]: newStatus }));
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Failed to update status.");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
   // Handle View Details
   const handleViewDetails = async (department: string) => {
     setSelectedLoan({ category: 'Bank Loan', department });
     setIsLoadingSchedule(true);
     
-    // Load current settings if it's BkashL
-    if (department.toLowerCase() === 'bkashl') {
-      setCurrentSettings(customSettings[department] || { pLoanAmount: 0, loanLent: 0 });
-    }
+    // Load current settings
+    setCurrentSettings(customSettings[department] || { pLoanAmount: 0, loanLent: 0, lockMonths: false });
     
     try {
       // Try to fetch existing schedule
@@ -376,9 +404,20 @@ export default function LoanFlow() {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-row items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-800">Loan Flow</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <h1 className="text-2xl font-bold text-slate-800">Loan Flow</h1>
+        
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search by LoanType..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
           <Link 
             to="/dashboard" 
             className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm group shrink-0"
@@ -386,17 +425,6 @@ export default function LoanFlow() {
           >
             <LayoutDashboard className="w-5 h-5 group-hover:scale-110 transition-transform" />
           </Link>
-        </div>
-        
-        <div className="relative w-full sm:w-64">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search by LoanType..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
         </div>
       </div>
 
@@ -491,7 +519,15 @@ export default function LoanFlow() {
               {loanData.map((row, index) => (
                 <tr key={row.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-1 text-slate-500">{index + 1}</td>
-                  <td className="px-4 py-1 font-medium text-slate-800">Bank Loan - {row.department}</td>
+                  <td className={cn(
+                    "px-4 py-1 font-medium",
+                    row.status === 'Running' && "text-emerald-600",
+                    row.status === 'Pending' && "text-red-600",
+                    row.status === 'Completed' && "text-blue-600",
+                    !['Running', 'Pending', 'Completed'].includes(row.status) && "text-slate-800"
+                  )}>
+                    Bank Loan - {row.department}
+                  </td>
                   <td className="px-4 py-1 text-right text-blue-600 font-medium">{row.loanAmount.toLocaleString()}</td>
                   <td className="px-4 py-1 text-right text-green-600 font-medium">{row.paidAmount.toLocaleString()}</td>
                   <td className="px-4 py-1 text-right text-orange-600 font-medium">{row.dueAmount.toLocaleString()}</td>
@@ -539,7 +575,15 @@ export default function LoanFlow() {
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">#{index + 1}</span>
-                <h3 className="font-bold text-slate-800">Bank Loan - {row.department}</h3>
+                <h3 className={cn(
+                  "font-bold",
+                  row.status === 'Running' && "text-emerald-600",
+                  row.status === 'Pending' && "text-red-600",
+                  row.status === 'Completed' && "text-blue-600",
+                  !['Running', 'Pending', 'Completed'].includes(row.status) && "text-slate-800"
+                )}>
+                  Bank Loan - {row.department}
+                </h3>
               </div>
               {!isActionHidden('loan_flow_action') && (
                 <div className="flex items-center gap-2">
@@ -620,27 +664,31 @@ export default function LoanFlow() {
                 </button>
               </div>
               <div className="flex items-center gap-2 w-full md:w-auto">
-                <button
-                  onClick={handleAddRow}
-                  className="flex-1 md:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base"
-                >
-                  <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Month</span><span className="sm:hidden">Add</span>
-                </button>
-                <button
-                  onClick={handleSaveSchedule}
-                  disabled={isSaving || isLoadingSchedule}
-                  className="flex-1 md:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-sm md:text-base"
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> <span className="hidden sm:inline">Saving...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Save className="w-4 h-4" /> <span className="hidden sm:inline">Save</span><span className="sm:hidden">Save</span>
-                    </>
-                  )}
-                </button>
+                {loanStatuses[selectedLoan.department] !== 'Completed' && (
+                  <>
+                    <button
+                      onClick={handleAddRow}
+                      className="flex-1 md:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base"
+                    >
+                      <Plus className="w-4 h-4" /> <span className="hidden sm:inline">Add Month</span><span className="sm:hidden">Add</span>
+                    </button>
+                    <button
+                      onClick={handleSaveSchedule}
+                      disabled={isSaving || isLoadingSchedule}
+                      className="flex-1 md:flex-none flex justify-center items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 text-sm md:text-base"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" /> <span className="hidden sm:inline">Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4" /> <span className="hidden sm:inline">Save</span><span className="sm:hidden">Save</span>
+                        </>
+                      )}
+                    </button>
+                  </>
+                )}
                 <button 
                   onClick={() => setSelectedLoan(null)}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors hidden md:block"
@@ -666,7 +714,9 @@ export default function LoanFlow() {
                           <th className="px-4 py-1 text-center w-32">Input 1</th>
                           <th className="px-4 py-1 text-center w-40">Input 2 (Amount)</th>
                           <th className="px-4 py-1 text-center w-32">Status</th>
-                          <th className="px-4 py-1 text-center w-16">Action</th>
+                          {loanStatuses[selectedLoan.department] !== 'Completed' && (
+                            <th className="px-4 py-1 text-center w-16">Action</th>
+                          )}
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
@@ -679,7 +729,8 @@ export default function LoanFlow() {
                                 <select
                                   value={row.month}
                                   onChange={(e) => handleRowChange(row.id, 'month', e.target.value)}
-                                  className="w-full px-2 py-1 border border-slate-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  disabled={loanStatuses[selectedLoan.department] === 'Completed' || customSettings[selectedLoan.department]?.lockMonths}
+                                  className="w-full px-2 py-1 border border-slate-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-slate-50 disabled:text-slate-500"
                                 >
                                   {getMonthOptions().map(opt => (
                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -713,14 +764,16 @@ export default function LoanFlow() {
                                   </span>
                                 )}
                               </td>
-                              <td className="px-4 py-2 text-center">
-                                <button
-                                  onClick={() => handleRemoveRow(row.id)}
-                                  className="p-1 text-slate-400 hover:text-red-600 transition-colors"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </td>
+                              {loanStatuses[selectedLoan.department] !== 'Completed' && (
+                                <td className="px-4 py-2 text-center">
+                                  <button
+                                    onClick={() => handleRemoveRow(row.id)}
+                                    className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </td>
+                              )}
                             </tr>
                           );
                         })}
@@ -746,12 +799,14 @@ export default function LoanFlow() {
                                   No Match
                                 </span>
                               )}
-                              <button
-                                onClick={() => handleRemoveRow(row.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
+                              {loanStatuses[selectedLoan.department] !== 'Completed' && (
+                                <button
+                                  onClick={() => handleRemoveRow(row.id)}
+                                  className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              )}
                             </div>
                           </div>
                           
@@ -761,7 +816,8 @@ export default function LoanFlow() {
                               <select
                                 value={row.month}
                                 onChange={(e) => handleRowChange(row.id, 'month', e.target.value)}
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                                disabled={loanStatuses[selectedLoan.department] === 'Completed' || customSettings[selectedLoan.department]?.lockMonths}
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm disabled:bg-slate-50 disabled:text-slate-500"
                               >
                                 {getMonthOptions().map(opt => (
                                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -844,6 +900,32 @@ export default function LoanFlow() {
                   placeholder="Enter custom loan lent"
                 />
               </div>
+              <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "p-2 rounded-lg",
+                    currentSettings.lockMonths ? "bg-blue-100 text-blue-600" : "bg-slate-200 text-slate-500"
+                  )}>
+                    <X className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-700">Lock Month Column</p>
+                    <p className="text-[10px] text-slate-500">Disable month selection in table</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setCurrentSettings(prev => ({ ...prev, lockMonths: !prev.lockMonths }))}
+                  className={cn(
+                    "w-12 h-6 rounded-full transition-all relative",
+                    currentSettings.lockMonths ? "bg-blue-600" : "bg-slate-300"
+                  )}
+                >
+                  <div className={cn(
+                    "absolute top-1 w-4 h-4 bg-white rounded-full transition-all",
+                    currentSettings.lockMonths ? "left-7" : "left-1"
+                  )} />
+                </button>
+              </div>
             </div>
             
             <div className="p-6 border-t border-slate-100 flex justify-end gap-3">
@@ -898,8 +980,29 @@ export default function LoanFlow() {
                 </div>
                 
                 <h2 className="text-2xl font-serif font-bold text-slate-800 mb-1 tracking-tight">Loan Certificate</h2>
-                <p className="text-sm text-slate-500 mb-6 uppercase tracking-widest font-semibold">Bank Loan - {certificateData.department}</p>
+                <p className="text-sm text-slate-500 mb-4 uppercase tracking-widest font-semibold">Bank Loan - {certificateData.department}</p>
                 
+                <div className="mb-6 flex justify-center">
+                  <div className="inline-flex flex-col items-center">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loan Status</label>
+                    <select
+                      value={loanStatuses[certificateData.department] || 'Running'}
+                      onChange={(e) => handleStatusChange(certificateData.department, e.target.value)}
+                      disabled={isUpdatingStatus}
+                      className={cn(
+                        "px-4 py-1.5 bg-slate-50 border rounded-full text-sm font-bold focus:outline-none focus:ring-2 transition-all cursor-pointer disabled:opacity-50",
+                        (loanStatuses[certificateData.department] === 'Running' || !loanStatuses[certificateData.department]) && "border-emerald-500 text-emerald-700 focus:ring-emerald-500/20 focus:border-emerald-500",
+                        loanStatuses[certificateData.department] === 'Pending' && "border-red-500 text-red-700 focus:ring-red-500/20 focus:border-red-500",
+                        loanStatuses[certificateData.department] === 'Completed' && "border-blue-500 text-blue-700 focus:ring-blue-500/20 focus:border-blue-500"
+                      )}
+                    >
+                      <option value="Running">Running</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-3 gap-3 mb-6">
                   <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-100">
                     <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loan Amount</p>
