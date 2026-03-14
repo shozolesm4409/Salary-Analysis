@@ -163,12 +163,14 @@ export default function LoanFlow() {
       dueAmount: acc.dueAmount + row.dueAmount,
       loanLent: acc.loanLent + row.loanLent,
       totalPaidAmount: acc.totalPaidAmount + row.totalPaidAmount,
+      loanCount: acc.loanCount + 1,
     }), {
       loanAmount: 0,
       paidAmount: 0,
       dueAmount: 0,
       loanLent: 0,
       totalPaidAmount: 0,
+      loanCount: 0,
     });
   }, [loanData]);
 
@@ -399,7 +401,18 @@ export default function LoanFlow() {
       </div>
 
       {/* Total Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        {/* Total Loans */}
+        <div className="bg-gradient-to-br from-slate-600 to-slate-800 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <Award className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-slate-100 uppercase tracking-tight">Total Loans</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.loanCount}</p>
+          </div>
+        </div>
+
         {/* Loan Amount */}
         <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
           <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
@@ -445,7 +458,7 @@ export default function LoanFlow() {
         </div>
 
         {/* T.Paid Amount */}
-        <div className="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] col-span-2 md:col-span-1">
+        <div className="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
           <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
             <TrendingDown className="w-5 h-5 text-white" />
           </div>
