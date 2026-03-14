@@ -1,9 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
+import { cn } from '@/lib/utils';
 import { Transaction } from '@/types';
 import { format } from 'date-fns';
-import { Eye, X, FileText } from 'lucide-react';
+import { Eye, X, FileText, TrendingUp, TrendingDown, Wallet, ArrowUpRight, ArrowDownRight, LayoutDashboard } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface SummaryRow {
   department: string;
@@ -132,47 +134,90 @@ export default function TakenSummary() {
 
   return (
     <div className="space-y-3 max-w-6xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-row items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Taken Summary</h1>
-          <p className="text-slate-500">Manage Taken/Given and Lend/Give Back records</p>
+          <p className="text-slate-500 text-sm sm:text-base">Manage Taken/Given and Lend/Give Back records</p>
         </div>
+        <Link 
+          to="/dashboard" 
+          className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm group shrink-0"
+          title="Overview"
+        >
+          <LayoutDashboard className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        </Link>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         {activeTab === 'taken_given' ? (
           <>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Taken</p>
-              <p className="text-xl font-bold text-emerald-600">{totalTaken.toLocaleString()}</p>
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <ArrowUpRight className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Total Taken</p>
+                <p className="text-lg font-black leading-none mt-1">{totalTaken.toLocaleString()}</p>
+              </div>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Given</p>
-              <p className="text-xl font-bold text-blue-600">{totalGiven.toLocaleString()}</p>
+
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <ArrowDownRight className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-blue-50 uppercase tracking-tight">Total Given</p>
+                <p className="text-lg font-black leading-none mt-1">{totalGiven.toLocaleString()}</p>
+              </div>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Taken Due</p>
-              <p className={`text-xl font-bold ${totalTakenDue > 0 ? 'text-red-600' : totalTakenDue < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
-                {totalTakenDue.toLocaleString()}
-              </p>
+
+            <div className={cn(
+              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white col-span-2 md:col-span-1",
+              totalTakenDue > 0 ? "bg-gradient-to-br from-rose-500 to-pink-600" : totalTakenDue < 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600" : "bg-gradient-to-br from-slate-600 to-slate-700"
+            )}>
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <Wallet className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-white/90 uppercase tracking-tight">Taken Due</p>
+                <p className="text-lg font-black leading-none mt-1">{totalTakenDue.toLocaleString()}</p>
+              </div>
             </div>
           </>
         ) : (
           <>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Lend</p>
-              <p className="text-xl font-bold text-emerald-600">{totalLend.toLocaleString()}</p>
+            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <TrendingUp className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Total Lend</p>
+                <p className="text-lg font-black leading-none mt-1">{totalLend.toLocaleString()}</p>
+              </div>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Total Give Back</p>
-              <p className="text-xl font-bold text-blue-600">{totalGiveBack.toLocaleString()}</p>
+
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <TrendingDown className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-blue-50 uppercase tracking-tight">Total Give Back</p>
+                <p className="text-lg font-black leading-none mt-1">{totalGiveBack.toLocaleString()}</p>
+              </div>
             </div>
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-              <p className="text-sm font-medium text-slate-500 mb-1">Lend Due</p>
-              <p className={`text-xl font-bold ${totalLendDue > 0 ? 'text-red-600' : totalLendDue < 0 ? 'text-emerald-600' : 'text-slate-600'}`}>
-                {totalLendDue.toLocaleString()}
-              </p>
+
+            <div className={cn(
+              "p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] text-white col-span-2 md:col-span-1",
+              totalLendDue > 0 ? "bg-gradient-to-br from-rose-500 to-pink-600" : totalLendDue < 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600" : "bg-gradient-to-br from-slate-600 to-slate-700"
+            )}>
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                <Wallet className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-bold text-white/90 uppercase tracking-tight">Lend Due</p>
+                <p className="text-lg font-black leading-none mt-1">{totalLendDue.toLocaleString()}</p>
+              </div>
             </div>
           </>
         )}
@@ -338,31 +383,41 @@ export default function TakenSummary() {
             
             <div className="p-6 overflow-y-auto">
               <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6">
-                <div className="bg-emerald-50 p-2 md:p-4 rounded-xl border border-emerald-100 text-center flex flex-col justify-center items-center">
-                  <p className="text-[10px] md:text-sm text-emerald-600 font-medium mb-1">
-                    {activeTab === 'taken_given' ? 'Total Taken' : 'Total Lend'}
-                  </p>
-                  <p className="text-sm md:text-2xl font-bold text-emerald-700">{selectedRow.amount1.toLocaleString()}</p>
+                <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 md:p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-center md:justify-start space-y-1 md:space-y-0 md:space-x-3 text-white">
+                  <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm hidden md:block">
+                    {activeTab === 'taken_given' ? <ArrowUpRight className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-[8px] md:text-[10px] font-bold text-emerald-50 uppercase tracking-tight">
+                      {activeTab === 'taken_given' ? 'Total Taken' : 'Total Lend'}
+                    </p>
+                    <p className="text-xs md:text-xl font-black leading-none mt-0.5 md:mt-1">{selectedRow.amount1.toLocaleString()}</p>
+                  </div>
                 </div>
-                <div className="bg-blue-50 p-2 md:p-4 rounded-xl border border-blue-100 text-center flex flex-col justify-center items-center">
-                  <p className="text-[10px] md:text-sm text-blue-600 font-medium mb-1">
-                    {activeTab === 'taken_given' ? 'Total Given' : 'Total Give Back'}
-                  </p>
-                  <p className="text-sm md:text-2xl font-bold text-blue-700">{selectedRow.amount2.toLocaleString()}</p>
+
+                <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 md:p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-center md:justify-start space-y-1 md:space-y-0 md:space-x-3 text-white">
+                  <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm hidden md:block">
+                    {activeTab === 'taken_given' ? <ArrowDownRight className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-[8px] md:text-[10px] font-bold text-blue-50 uppercase tracking-tight">
+                      {activeTab === 'taken_given' ? 'Total Given' : 'Total Give Back'}
+                    </p>
+                    <p className="text-xs md:text-xl font-black leading-none mt-0.5 md:mt-1">{selectedRow.amount2.toLocaleString()}</p>
+                  </div>
                 </div>
-                <div className={`p-2 md:p-4 rounded-xl border text-center flex flex-col justify-center items-center ${
-                  selectedRow.due > 0 ? 'bg-red-50 border-red-100' : selectedRow.due < 0 ? 'bg-emerald-50 border-emerald-100' : 'bg-slate-50 border-slate-100'
-                }`}>
-                  <p className={`text-[10px] md:text-sm font-medium mb-1 ${
-                    selectedRow.due > 0 ? 'text-red-600' : selectedRow.due < 0 ? 'text-emerald-600' : 'text-slate-600'
-                  }`}>
-                    Total Due
-                  </p>
-                  <p className={`text-sm md:text-2xl font-bold ${
-                    selectedRow.due > 0 ? 'text-red-700' : selectedRow.due < 0 ? 'text-emerald-700' : 'text-slate-700'
-                  }`}>
-                    {selectedRow.due.toLocaleString()}
-                  </p>
+
+                <div className={cn(
+                  "p-2 md:p-4 rounded-xl shadow-sm flex flex-col md:flex-row items-center justify-center md:justify-start space-y-1 md:space-y-0 md:space-x-3 text-white",
+                  selectedRow.due > 0 ? "bg-gradient-to-br from-rose-500 to-pink-600" : selectedRow.due < 0 ? "bg-gradient-to-br from-emerald-500 to-teal-600" : "bg-gradient-to-br from-slate-600 to-slate-700"
+                )}>
+                  <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm hidden md:block">
+                    <Wallet className="w-4 h-4" />
+                  </div>
+                  <div className="text-center md:text-left">
+                    <p className="text-[8px] md:text-[10px] font-bold text-white/90 uppercase tracking-tight">Total Due</p>
+                    <p className="text-xs md:text-xl font-black leading-none mt-0.5 md:mt-1">{selectedRow.due.toLocaleString()}</p>
+                  </div>
                 </div>
               </div>
 

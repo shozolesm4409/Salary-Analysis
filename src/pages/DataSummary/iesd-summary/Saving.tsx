@@ -163,52 +163,83 @@ export default function Saving({
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-2 sm:gap-3">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-2 rounded-lg shadow-lg border border-blue-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.pSavingIn.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <ArrowUpRight className="w-3 h-3 mr-1" /> P.Saving In
+        <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-3 rounded-xl shadow-lg border border-blue-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <ArrowUpRight className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">P.Saving In</div>
+            <div className="text-xl font-black">{stats.pSavingIn.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-pink-500 to-pink-700 p-2 rounded-lg shadow-lg border border-pink-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.savingOut.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <ArrowDownRight className="w-3 h-3 mr-1" /> Saving Out
+
+        <div className="bg-gradient-to-br from-pink-500 to-pink-700 p-3 rounded-xl shadow-lg border border-pink-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <ArrowDownRight className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Saving Out</div>
+            <div className="text-xl font-black">{stats.savingOut.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-green-500 to-green-700 p-2 rounded-lg shadow-lg border border-green-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.pAvailable.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Wallet className="w-3 h-3 mr-1" /> P.Available
+
+        <div className="bg-gradient-to-br from-green-500 to-green-700 p-3 rounded-xl shadow-lg border border-green-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Wallet className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">P.Available</div>
+            <div className="text-xl font-black">{stats.pAvailable.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-slate-700 to-slate-900 p-2 rounded-lg shadow-lg border border-slate-600 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.ebfSaving.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <PiggyBank className="w-3 h-3 mr-1" /> EBF Saving
+
+        <div className="bg-gradient-to-br from-slate-700 to-slate-900 p-3 rounded-xl shadow-lg border border-slate-600 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <PiggyBank className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">EBF Saving</div>
+            <div className="text-xl font-black">{stats.ebfSaving.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-2 rounded-lg shadow-lg border border-purple-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.totalEbf.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Calculator className="w-3 h-3 mr-1" /> Total EBF
+
+        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-xl shadow-lg border border-purple-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Calculator className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Total EBF</div>
+            <div className="text-xl font-black">{stats.totalEbf.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-2 rounded-lg shadow-lg border border-amber-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.runningProfit.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <TrendingUp className="w-3 h-3 mr-1" /> Running Profit
+
+        <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-3 rounded-xl shadow-lg border border-amber-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <TrendingUp className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Running Profit</div>
+            <div className="text-xl font-black">{stats.runningProfit.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-rose-500 to-red-700 p-2 rounded-lg shadow-lg border border-rose-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.quittingJob.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Briefcase className="w-3 h-3 mr-1" /> Quitting a job
+
+        <div className="bg-gradient-to-br from-rose-500 to-red-700 p-3 rounded-xl shadow-lg border border-rose-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Briefcase className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Quitting a job</div>
+            <div className="text-xl font-black">{stats.quittingJob.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-2 rounded-lg shadow-lg border border-cyan-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.totalEDP.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Coins className="w-3 h-3 mr-1" /> Total E.D.P
+
+        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-3 rounded-xl shadow-lg border border-cyan-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Coins className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Total E.D.P</div>
+            <div className="text-xl font-black">{stats.totalEDP.toLocaleString()}</div>
           </div>
         </div>
       </div>

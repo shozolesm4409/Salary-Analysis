@@ -13,12 +13,17 @@ import {
   Save,
   Loader2,
   Settings as SettingsIcon,
-  Award
+  Award,
+  Landmark,
+  TrendingUp,
+  TrendingDown,
+  LayoutDashboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { doc, getDoc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/context/AuthContext';
+import { Link } from 'react-router-dom';
 
 // Helper to generate month options
 const getMonthOptions = () => {
@@ -369,41 +374,85 @@ export default function LoanFlow() {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-2xl font-bold text-slate-800">Loan Flow</h1>
-        <div className="relative w-full sm:w-auto">
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row items-center justify-between">
+          <h1 className="text-2xl font-bold text-slate-800">Loan Flow</h1>
+          <Link 
+            to="/dashboard" 
+            className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm group shrink-0"
+            title="Overview"
+          >
+            <LayoutDashboard className="w-5 h-5 group-hover:scale-110 transition-transform" />
+          </Link>
+        </div>
+        
+        <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input
             type="text"
             placeholder="Search by LoanType..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full sm:w-64 pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Total Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
-          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase mb-1">Loan Amount</p>
-          <p className="text-lg sm:text-xl font-bold text-blue-600">{totals.loanAmount.toLocaleString()}</p>
+        {/* Loan Amount */}
+        <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <Landmark className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-blue-50 uppercase tracking-tight">Loan Amount</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.loanAmount.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
-          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase mb-1">Paid Amount</p>
-          <p className="text-lg sm:text-xl font-bold text-green-600">{totals.paidAmount.toLocaleString()}</p>
+
+        {/* Paid Amount */}
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-emerald-50 uppercase tracking-tight">Paid Amount</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.paidAmount.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
-          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase mb-1">Due Amount</p>
-          <p className="text-lg sm:text-xl font-bold text-orange-600">{totals.dueAmount.toLocaleString()}</p>
+
+        {/* Due Amount */}
+        <div className="bg-gradient-to-br from-orange-400 to-red-500 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <AlertCircle className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-orange-50 uppercase tracking-tight">Due Amount</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.dueAmount.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
-          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase mb-1">Loan Lent</p>
-          <p className="text-lg sm:text-xl font-bold text-purple-600">{totals.loanLent.toLocaleString()}</p>
+
+        {/* Loan Lent */}
+        <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02]">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <TrendingUp className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-purple-50 uppercase tracking-tight">Loan Lent</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.loanLent.toLocaleString()}</p>
+          </div>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center col-span-2 md:col-span-1">
-          <p className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase mb-1">T.Paid Amount</p>
-          <p className="text-lg sm:text-xl font-bold text-emerald-600">{totals.totalPaidAmount.toLocaleString()}</p>
+
+        {/* T.Paid Amount */}
+        <div className="bg-gradient-to-br from-rose-500 to-pink-600 p-3 rounded-l shadow-sm flex flex-row items-center justify-start space-x-3 hover:shadow-md transition-all hover:scale-[1.02] col-span-2 md:col-span-1">
+          <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+            <TrendingDown className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-[10px] font-bold text-rose-50 uppercase tracking-tight">T.Paid Amount</p>
+            <p className="text-lg font-black text-white leading-none mt-1">{totals.totalPaidAmount.toLocaleString()}</p>
+          </div>
         </div>
       </div>
 

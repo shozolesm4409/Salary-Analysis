@@ -2,9 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { Transaction } from '@/types';
 import { format } from 'date-fns';
-import { Eye, X, FileText } from 'lucide-react';
+import { Eye, X, FileText, LayoutDashboard } from 'lucide-react';
 import { useSettings } from '@/hooks/useSettings';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 interface CategorySummaryRow {
   id: string; // unique id for the row (category + type)
@@ -75,11 +75,18 @@ export default function CategoriesSummary() {
 
   return (
     <div className="space-y-3 max-w-6xl mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-row items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Categories Summary</h1>
-          <p className="text-slate-500">View total amounts grouped by category</p>
+          <p className="text-slate-500 text-sm sm:text-base">View total amounts grouped by category</p>
         </div>
+        <Link 
+          to="/dashboard" 
+          className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm group shrink-0"
+          title="Overview"
+        >
+          <LayoutDashboard className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        </Link>
       </div>
 
       {/* Tabs */}

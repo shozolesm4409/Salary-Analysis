@@ -22,28 +22,43 @@ export default function Expenses({ stats, allMonths, groupedData, categories, sh
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-        <div className="bg-gradient-to-br from-slate-700 to-slate-900 p-2 rounded-lg shadow-lg border border-slate-600 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.totalIncome.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Receipt className="w-3 h-3 mr-1" /> Total Income
+        <div className="bg-gradient-to-br from-slate-700 to-slate-900 p-3 rounded-xl shadow-lg border border-slate-600 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Receipt className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Total Income</div>
+            <div className="text-xl font-black">{stats.totalIncome.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-orange-500 to-red-600 p-2 rounded-lg shadow-lg border border-orange-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.totalExpenses.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <TrendingDown className="w-3 h-3 mr-1" /> Total Expenses
+
+        <div className="bg-gradient-to-br from-orange-500 to-red-600 p-3 rounded-xl shadow-lg border border-orange-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <TrendingDown className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Total Expenses</div>
+            <div className="text-xl font-black">{stats.totalExpenses.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-lg shadow-lg border border-emerald-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.available.toLocaleString()}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Wallet className="w-3 h-3 mr-1" /> Available
+
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl shadow-lg border border-emerald-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Wallet className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Available</div>
+            <div className="text-xl font-black">{stats.available.toLocaleString()}</div>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-2 rounded-lg shadow-lg border border-purple-400 text-white text-center">
-          <div className="text-xl font-black mb-0.5">{stats.totalMonths}</div>
-          <div className="flex items-center justify-center text-[10px] font-bold opacity-90 uppercase">
-            <Calendar className="w-3 h-3 mr-1" /> Total Month
+
+        <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-xl shadow-lg border border-purple-400 text-white flex items-center gap-3">
+          <div className="p-2 bg-white/20 rounded-lg">
+            <Calendar className="w-5 h-5 text-white" />
+          </div>
+          <div className="text-left">
+            <div className="text-[10px] font-bold opacity-80 uppercase tracking-wider">Total Month</div>
+            <div className="text-xl font-black">{stats.totalMonths}</div>
           </div>
         </div>
       </div>

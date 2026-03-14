@@ -2,11 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
 import { format, isToday, parseISO, startOfMonth, endOfMonth, isWithinInterval, differenceInMonths } from 'date-fns';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { 
   Coins, 
   Wallet, 
   Baby, 
+  PiggyBank,
   TrendingUp, 
   TrendingDown,
   PieChart, 
@@ -20,7 +21,8 @@ import {
   CalendarCheck,
   Moon,
   Sun,
-  ChevronDown
+  ChevronDown,
+  LayoutDashboard
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -143,27 +145,36 @@ export default function DSMDashboard() {
       isDarkMode ? "bg-[#1a1a1a] text-white" : "bg-slate-50 text-slate-900"
     )}>
       {/* Navigation Tabs */}
-      <div className="flex gap-2 border-b border-slate-200 dark:border-slate-700 pb-1 mb-3 overflow-x-auto no-scrollbar">
-        <button
-          onClick={() => setActiveTab('dbp')}
-          className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
-            activeTab === 'dbp' 
-              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-          }`}
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-1 mb-3 overflow-x-auto no-scrollbar">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setActiveTab('dbp')}
+            className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
+              activeTab === 'dbp' 
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+            }`}
+          >
+            DBP
+          </button>
+          <button
+            onClick={() => setActiveTab('sdbp')}
+            className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
+              activeTab === 'sdbp' 
+                ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
+            }`}
+          >
+            SDBP
+          </button>
+        </div>
+        <Link 
+          to="/dashboard" 
+          className="p-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-200 dark:hover:border-blue-800 transition-all shadow-sm group shrink-0"
+          title="Overview"
         >
-          DBP
-        </button>
-        <button
-          onClick={() => setActiveTab('sdbp')}
-          className={`px-6 py-2 rounded-t-lg font-medium transition-colors whitespace-nowrap ${
-            activeTab === 'sdbp' 
-              ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400' 
-              : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-          }`}
-        >
-          SDBP
-        </button>
+          <LayoutDashboard className="w-5 h-5 group-hover:scale-110 transition-transform" />
+        </Link>
       </div>
 
       {activeTab === 'dbp' && (
@@ -204,19 +215,21 @@ export default function DSMDashboard() {
                   <div 
                     key={i}
                     className={cn(
-                      "p-2 rounded-lg shadow-lg border-2 border-black/10 transition-all hover:scale-105 group",
+                      "p-3 rounded-l shadow-lg border-2 border-black/10 transition-all hover:scale-105 group flex flex-row items-center justify-start space-x-3",
                       "bg-gradient-to-br", boxGradients[i]
                     )}
                   >
-                    <div className="flex items-center justify-center mb-1">
-                      <box.icon className="w-4 h-4 text-white/80 group-hover:text-white transition-colors" />
+                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                      <box.icon className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" />
                     </div>
-                    <h2 className="text-xl font-black text-white text-center">
-                      {box.isCurrency === false ? box.value : Math.floor(box.value || 0).toLocaleString()}
-                    </h2>
-                    <p className="text-[10px] font-bold text-white/90 text-center uppercase tracking-wider mt-0.5">
-                      {box.label}
-                    </p>
+                    <div className="text-left">
+                      <h2 className="text-xl font-black text-white leading-none">
+                        {box.isCurrency === false ? box.value : Math.floor(box.value || 0).toLocaleString()}
+                      </h2>
+                      <p className="text-[10px] font-bold text-white/90 uppercase tracking-wider mt-1">
+                        {box.label}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -235,16 +248,30 @@ export default function DSMDashboard() {
         <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <h1 className="text-3xl font-black text-center">Monthly Live Summary</h1>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-            {/* Reusing DBP boxes logic for SDBP as per original HTML structure */}
             {[
-              { label: 'Current Month Income', value: stats?.monthIncome, gradient: 'from-[#191970] to-[#4169E1]' },
-              { label: 'Current Month Expense', value: stats?.monthExpense, gradient: 'from-[#8B0000] to-[#FF4500]' },
-              { label: 'Current Month Saving', value: stats?.monthSaving, gradient: 'from-[#006400] to-[#228B22]' },
-              { label: 'Current Month Available', value: stats?.monthAvailable, gradient: 'from-[#8B4513] to-[#D2691E]' },
+              { label: 'Month Income', value: stats?.monthIncome, gradient: 'from-[#191970] to-[#4169E1]', icon: TrendingUp },
+              { label: 'Month Expense', value: stats?.monthExpense, gradient: 'from-[#8B0000] to-[#FF4500]', icon: TrendingDown },
+              { label: 'Month Saving', value: stats?.monthSaving, gradient: 'from-[#006400] to-[#228B22]', icon: PiggyBank },
+              { label: 'Month Available', value: stats?.monthAvailable, gradient: 'from-[#8B4513] to-[#D2691E]', icon: Landmark },
             ].map((box, i) => (
-              <div key={i} className={cn("p-2 rounded-lg shadow-lg text-white text-center bg-gradient-to-br", box.gradient)}>
-                <h2 className="text-xl font-black">{Math.floor(box.value || 0).toLocaleString()}</h2>
-                <p className="text-[10px] font-bold mt-0.5 uppercase">{box.label}</p>
+              <div 
+                key={i} 
+                className={cn(
+                  "p-3 rounded-l shadow-lg text-white transition-all hover:scale-105 group flex flex-row items-center justify-start space-x-3 bg-gradient-to-br", 
+                  box.gradient
+                )}
+              >
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm shrink-0">
+                  <box.icon className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" />
+                </div>
+                <div className="text-left">
+                  <h2 className="text-xl font-black leading-none">
+                    {Math.floor(box.value || 0).toLocaleString()}
+                  </h2>
+                  <p className="text-[10px] font-bold mt-1 uppercase tracking-wider">
+                    {box.label}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useSettings } from '@/hooks/useSettings';
 import { Transaction } from '@/types';
-import { Plus, X, Loader2, Settings } from 'lucide-react';
+import { Plus, X, Loader2, Settings, LayoutDashboard } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 interface TransactionFormProps {
   onClose: () => void;
@@ -48,8 +49,26 @@ export default function TransactionForm({ onClose, initialData, isInline = false
 
       if (initialData?.id) {
         await updateTransaction(initialData.id, transactionData);
+        Swal.fire({
+          title: 'Updated!',
+          text: 'Transaction has been updated successfully.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          position: 'top-end',
+          toast: true
+        });
       } else {
         await addTransaction(transactionData);
+        Swal.fire({
+          title: 'Success!',
+          text: 'New transaction has been added.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          position: 'top-end',
+          toast: true
+        });
         // Reset form for new transactions
         setFormData({
           date: format(new Date(), 'yyyy-MM-dd'),
