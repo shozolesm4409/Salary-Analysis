@@ -32,6 +32,13 @@ export interface LandingSetting {
   isHidden: boolean;
 }
 
+export interface MenuSetting {
+  id: string;
+  name: string;
+  label: string;
+  isHidden: boolean;
+}
+
 export function useSettings() {
   const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -40,6 +47,7 @@ export function useSettings() {
   const [buttonSettings, setButtonSettings] = useState<ButtonSetting[]>([]);
   const [actionSettings, setActionSettings] = useState<ActionSetting[]>([]);
   const [landingSettings, setLandingSettings] = useState<LandingSetting[]>([]);
+  const [menuSettings, setMenuSettings] = useState<MenuSetting[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -128,6 +136,7 @@ export function useSettings() {
       setTableSettings([]);
       setButtonSettings([]);
       setActionSettings([]);
+      setMenuSettings([]);
       setError(null);
       return () => {
         unsubLandingSettings();
@@ -139,6 +148,7 @@ export function useSettings() {
     const tableSettingsQuery = query(collection(db, 'table_settings'));
     const buttonSettingsQuery = query(collection(db, 'button_settings'));
     const actionSettingsQuery = query(collection(db, 'action_settings'));
+    const menuSettingsQuery = query(collection(db, 'menu_settings'));
 
     const unsubTableSettings = onSnapshot(tableSettingsQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as TableSetting[];
@@ -314,7 +324,60 @@ export function useSettings() {
       setActionSettings(defaultSettings);
     });
 
+    const unsubMenuSettings = onSnapshot(menuSettingsQuery, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as MenuSetting[];
+      
+      const defaultSettings: MenuSetting[] = [
+        { id: 'menu_dashboard', name: 'menu_dashboard', label: 'Dashboard Menu', isHidden: false },
+        { id: 'menu_transactions', name: 'menu_transactions', label: 'Transactions Menu', isHidden: false },
+        { id: 'menu_reports', name: 'menu_reports', label: 'Reports Menu', isHidden: false },
+        { id: 'menu_iesd', name: 'menu_iesd', label: 'IESD Menu', isHidden: false },
+        { id: 'menu_dsm', name: 'menu_dsm', label: 'DSM Menu', isHidden: false },
+        { id: 'menu_more', name: 'menu_more', label: 'More Options Menu', isHidden: false },
+        { id: 'tab_today', name: 'tab_today', label: 'Today Tab', isHidden: false },
+        { id: 'tab_monthly', name: 'tab_monthly', label: 'Monthly Tab', isHidden: false },
+        { id: 'tab_ie_filter', name: 'tab_ie_filter', label: 'IE Filter Tab', isHidden: false },
+        { id: 'tab_pdf', name: 'tab_pdf', label: 'PDF Tab', isHidden: false },
+      ];
 
+      const existingIds = new Set(data.map(s => s.id));
+
+      defaultSettings.forEach(setting => {
+        if (!existingIds.has(setting.id)) {
+          setDoc(doc(db, 'menu_settings', setting.id), setting).catch(err => {
+            console.warn(`Could not initialize menu setting ${setting.id} in Firestore:`, err.message);
+          });
+        }
+      });
+
+      // Deduplicate data from Firestore by name
+      const uniqueData = data.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+      
+      // Add any missing default settings
+      const mergedData = [...uniqueData];
+      defaultSettings.forEach(ds => {
+        if (!mergedData.find(s => s.name === ds.name)) {
+          mergedData.push(ds);
+        }
+      });
+
+      setMenuSettings(mergedData);
+    }, (error) => {
+      console.warn("Firestore menu_settings error (using defaults):", error.message);
+      const defaultSettings: MenuSetting[] = [
+        { id: 'menu_dashboard', name: 'menu_dashboard', label: 'Dashboard Menu', isHidden: false },
+        { id: 'menu_transactions', name: 'menu_transactions', label: 'Transactions Menu', isHidden: false },
+        { id: 'menu_reports', name: 'menu_reports', label: 'Reports Menu', isHidden: false },
+        { id: 'menu_iesd', name: 'menu_iesd', label: 'IESD Menu', isHidden: false },
+        { id: 'menu_dsm', name: 'menu_dsm', label: 'DSM Menu', isHidden: false },
+        { id: 'menu_more', name: 'menu_more', label: 'More Options Menu', isHidden: false },
+        { id: 'tab_today', name: 'tab_today', label: 'Today Tab', isHidden: false },
+        { id: 'tab_monthly', name: 'tab_monthly', label: 'Monthly Tab', isHidden: false },
+        { id: 'tab_ie_filter', name: 'tab_ie_filter', label: 'IE Filter Tab', isHidden: false },
+        { id: 'tab_pdf', name: 'tab_pdf', label: 'PDF Tab', isHidden: false },
+      ];
+      setMenuSettings(defaultSettings);
+    });
 
     // Safety timeout: if Firestore doesn't resolve in 3 seconds, stop loading
     const timeout = setTimeout(() => {
@@ -328,6 +391,7 @@ export function useSettings() {
       unsubButtonSettings();
       unsubActionSettings();
       unsubLandingSettings();
+      unsubMenuSettings();
       clearTimeout(timeout);
     };
   }, [user]);
@@ -374,6 +438,10 @@ export function useSettings() {
     await updateDoc(doc(db, 'landing_settings', id), { isHidden });
   };
 
+  const updateMenuSetting = async (id: string, isHidden: boolean) => {
+    await updateDoc(doc(db, 'menu_settings', id), { isHidden });
+  };
+
   const isTableHidden = (tableName: string) => {
     return tableSettings.find(s => s.name === tableName)?.isHidden || false;
   };
@@ -390,6 +458,10 @@ export function useSettings() {
     return landingSettings.find(s => s.name === landingName)?.isHidden || false;
   };
 
+  const isMenuHidden = (menuName: string) => {
+    return menuSettings.find(s => s.name === menuName)?.isHidden || false;
+  };
+
   return { 
     categories, 
     departments, 
@@ -397,6 +469,7 @@ export function useSettings() {
     buttonSettings,
     actionSettings,
     landingSettings,
+    menuSettings,
     loading, 
     error,
     addCategory, 
@@ -409,9 +482,11 @@ export function useSettings() {
     updateButtonSetting,
     updateActionSetting,
     updateLandingSetting,
+    updateMenuSetting,
     isTableHidden,
     isButtonHidden,
     isActionHidden,
-    isLandingHidden
+    isLandingHidden,
+    isMenuHidden
   };
 }

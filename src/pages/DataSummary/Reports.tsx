@@ -80,7 +80,7 @@ export default function Reports() {
     });
   }
 
-  const monthlySummary = monthsToDisplay.map(month => {
+  const monthlySummary = [...monthsToDisplay].reverse().map(month => {
     const monthStr = format(month, 'yyyy-MM');
     const monthTransactions = filteredTransactions.filter(t => t.month === monthStr);
     const income = monthTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);

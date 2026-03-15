@@ -34,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isMoreOptionsOpen, setIsMoreOptionsOpen] = useState(false);
   const { logout, user } = useAuth();
-  const { isTableHidden } = useSettings();
+  const { isTableHidden, isMenuHidden } = useSettings();
   const location = useLocation();
   const [userProfile, setUserProfile] = useState<{ displayName?: string; photoBase64?: string } | null>(null);
 
@@ -52,10 +52,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isDataSummaryOpen, setIsDataSummaryOpen] = useState(false);
 
   const navigation = [
-    { name: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Transactions', href: '/transactions', icon: Receipt, tableKey: 'transactions' },
-    { name: 'TMIEPDF-Filter', href: '/tmiepdf-filter', icon: FileText },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Overview', href: '/dashboard', icon: LayoutDashboard, menuKey: 'Dashboard Menu' },
+    { name: 'Transactions', href: '/transactions', icon: Receipt, tableKey: 'transactions', menuKey: 'Transactions Menu' },
+    { name: 'TMIEPDF-Filter', href: '/tmiepdf-filter', icon: FileText, menuKey: 'TMIEPDF Filter Menu' },
+    { name: 'Settings', href: '/settings', icon: Settings, menuKey: 'Settings Menu' },
   ];
 
   const handleLogout = async () => {
@@ -104,6 +104,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <nav className="flex-1 px-2 py-5 space-y-1 overflow-y-auto">
             {navigation.map((item) => {
               if (item.tableKey && isTableHidden(item.tableKey)) return null;
+              if (item.menuKey && isMenuHidden(item.menuKey)) return null;
               const Icon = item.icon;
               const isActive = location.pathname === item.href;
               return (

@@ -160,7 +160,7 @@ export default function Dashboard() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   const monthsToDisplay = Array.from(new Set(filteredTransactions.map(t => t.month)))
-    .sort()
+    .sort((a, b) => (b as string).localeCompare(a as string))
     .map(m => parseISO(`${m}-01`));
 
   const monthlySummary = monthsToDisplay.map(month => {
@@ -405,6 +405,18 @@ export default function Dashboard() {
             <p className="text-[10px] text-rose-200 mt-0.5">For {format(new Date(), 'MMMM yyyy')}</p>
           </div>
 
+          <div className={cn(
+            "p-2 rounded-l shadow-md text-white lg:col-span-2",
+            netBalance >= 0 ? "bg-gradient-to-br from-cyan-600 to-blue-700" : "bg-gradient-to-br from-rose-600 to-pink-700"
+          )}>
+            <div className="flex items-center justify-between mb-1">
+              <p className="text-sm font-medium text-cyan-100">Monthly Available</p>
+              <Wallet className="w-4 h-4 text-cyan-200" />
+            </div>
+            <p className="text-xl font-bold">৳ {netBalance.toLocaleString()}</p>
+            <p className="text-[10px] text-cyan-200 mt-0.5">Balance for {format(new Date(), 'MMM yyyy')}</p>
+          </div>
+
           <div className="bg-gradient-to-br from-green-600 to-emerald-700 p-2 rounded-l shadow-md text-white lg:col-span-2">
             <div className="flex items-center justify-between mb-1">
               <p className="text-sm font-medium text-green-100">Today Income</p>
@@ -423,8 +435,8 @@ export default function Dashboard() {
             <p className="text-[10px] text-rose-200 mt-0.5">For {format(new Date(), 'dd MMM yyyy')}</p>
           </div>
 
-          <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 col-span-2 lg:col-span-4">
-            <h3 className="text-xs font-bold text-slate-900 mb-1">Salary Trend ({selectedYear === 'All' ? 'All Time' : selectedYear})</h3>
+          <div className="bg-white p-2 rounded-l shadow-sm border border-slate-100 lg:col-span-2">
+            <h3 className="text-xs font-bold text-slate-900 mb-1">Salary Trend</h3>
             <div className="h-14">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlySummary} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>

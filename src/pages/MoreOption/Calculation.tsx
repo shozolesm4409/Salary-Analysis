@@ -739,47 +739,47 @@ export default function Calculation() {
 
           {activeType === 'Working Hour' && (
             <div className="mt-8 space-y-6">
-              <div className="overflow-x-auto rounded-l border border-slate-200">
-                <table className="w-full border-collapse">
+              <div className="overflow-x-auto rounded-l border border-slate-200 no-scrollbar">
+                <table className="w-full border-collapse text-[10px] sm:text-sm">
                   <thead>
                     <tr className="bg-blue-600 text-white">
-                      <th className="p-3 text-left">Month Name</th>
-                      <th className="p-3 text-center">Working Hours</th>
-                      <th className="p-3 text-center">Working Days</th>
-                      <th className="p-3 text-center">Monthly hours</th>
+                      <th className="p-1.5 sm:p-3 text-left">Month Name</th>
+                      <th className="p-1.5 sm:p-3 text-center">Working Hours</th>
+                      <th className="p-1.5 sm:p-3 text-center">Working Days</th>
+                      <th className="p-1.5 sm:p-3 text-center">Monthly hours</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {Object.entries(workingHours).map(([month, data]: [string, { hour: string; day: string }]) => (
                       <tr key={month} className="hover:bg-slate-50 transition-colors">
-                        <td className="p-3 font-medium text-slate-700 capitalize">{month}</td>
-                        <td className="p-3 text-center">
+                        <td className="p-1.5 sm:p-3 font-medium text-slate-700 capitalize">{month}</td>
+                        <td className="p-1.5 sm:p-3 text-center">
                           <input
                             type="text"
                             value={data.hour}
                             onChange={(e) => setWorkingHours(prev => ({ ...prev, [month]: { ...prev[month], hour: e.target.value } }))}
                             placeholder="HH:MM"
-                            className="w-24 h-9 px-2 text-center rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-16 sm:w-24 h-8 sm:h-9 px-1 sm:px-2 text-center rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
                           />
                         </td>
-                        <td className="p-3 text-center">
+                        <td className="p-1.5 sm:p-3 text-center">
                           <input
                             type="number"
                             value={data.day}
                             onChange={(e) => setWorkingHours(prev => ({ ...prev, [month]: { ...prev[month], day: e.target.value } }))}
-                            className="w-24 h-9 px-2 text-center rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
+                            className="w-16 sm:w-24 h-8 sm:h-9 px-1 sm:px-2 text-center rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none"
                           />
                         </td>
-                        <td className="p-3 text-center font-semibold text-slate-600">
+                        <td className="p-1.5 sm:p-3 text-center font-semibold text-slate-600">
                           {calculateWorkingHourAverage(month)}
                         </td>
                       </tr>
                     ))}
                     <tr className="bg-slate-50 font-bold text-slate-800">
-                      <td className="p-3">Total</td>
-                      <td className="p-3 text-center">{getWorkingHourTotals().hours}</td>
-                      <td className="p-3 text-center">{getWorkingHourTotals().days}</td>
-                      <td className="p-3 text-center">{getWorkingHourTotals().avg}</td>
+                      <td className="p-1.5 sm:p-3">Total</td>
+                      <td className="p-1.5 sm:p-3 text-center">{getWorkingHourTotals().hours}</td>
+                      <td className="p-1.5 sm:p-3 text-center">{getWorkingHourTotals().days}</td>
+                      <td className="p-1.5 sm:p-3 text-center">{getWorkingHourTotals().avg}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -798,27 +798,27 @@ export default function Calculation() {
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-slate-800">Amount Summary</h3>
                   <div className="overflow-x-auto rounded-l border border-slate-200">
-                    <table className="w-full border-collapse">
+                    <table className="w-full border-collapse text-[10px] sm:text-sm whitespace-nowrap">
                       <thead>
                         <tr className="bg-slate-800 text-white">
-                          <th className="p-3">Increment Amount</th>
-                          <th className="p-3">Basic Amount</th>
-                          <th className="p-3">Extra Amount</th>
-                          <th className="p-3">1 Weekend</th>
-                          <th className="p-3">1 Govt. Holiday</th>
-                          <th className="p-3">Eid Bonus</th>
-                          <th className="p-3">Total Amount</th>
+                          <th className="p-1.5 sm:p-3">Increment Amount</th>
+                          <th className="p-1.5 sm:p-3">Basic Amount</th>
+                          <th className="p-1.5 sm:p-3">Extra Amount</th>
+                          <th className="p-1.5 sm:p-3">1 Weekend</th>
+                          <th className="p-1.5 sm:p-3">1 Govt. Holiday</th>
+                          <th className="p-1.5 sm:p-3">Eid Bonus</th>
+                          <th className="p-1.5 sm:p-3">Total Amount</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr className="text-center font-medium">
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.amount}</td>
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.basicAmount}</td>
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.extraAmount}</td>
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.oneWeekend}</td>
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.oneGovtHoliday}</td>
-                          <td className="p-3 border border-slate-100">{incrementResult.additionalTable.eidBonus}</td>
-                          <td className="p-3 border border-slate-100 font-bold text-blue-600">{incrementResult.totals.totalAmount}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.amount}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.basicAmount}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.extraAmount}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.oneWeekend}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.oneGovtHoliday}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100">{incrementResult.additionalTable.eidBonus}</td>
+                          <td className="p-1.5 sm:p-3 border border-slate-100 font-bold text-blue-600">{incrementResult.totals.totalAmount}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -828,29 +828,29 @@ export default function Calculation() {
                 <div className="space-y-4">
                   <h3 className="text-xl font-bold text-slate-800">Monthly Increment Summary</h3>
                   <div className="overflow-x-auto rounded-l border border-slate-200">
-                    <table className="w-full border-collapse">
+                    <table className="w-full border-collapse text-[10px] sm:text-sm whitespace-nowrap">
                       <thead>
-                        <tr className="bg-blue-600 text-white text-xs uppercase tracking-wider">
-                          <th className="p-3">Month</th>
-                          <th className="p-3">I. Amount</th>
-                          <th className="p-3">Working Days</th>
-                          <th className="p-3">Weekend</th>
-                          <th className="p-3">W.Amount</th>
-                          <th className="p-3">G. Holiday</th>
-                          <th className="p-3">G.H Amount</th>
-                          <th className="p-3">Eid Bonus</th>
-                          <th className="p-3">Sub-Total</th>
-                          <th className="p-3">Org Saving</th>
-                          <th className="p-3">Total Amount</th>
+                        <tr className="bg-blue-600 text-white uppercase tracking-wider">
+                          <th className="p-1.5 sm:p-3">Month</th>
+                          <th className="p-1.5 sm:p-3">I. Amount</th>
+                          <th className="p-1.5 sm:p-3">Working Days</th>
+                          <th className="p-1.5 sm:p-3">Weekend</th>
+                          <th className="p-1.5 sm:p-3">W.Amount</th>
+                          <th className="p-1.5 sm:p-3">G. Holiday</th>
+                          <th className="p-1.5 sm:p-3">G.H Amount</th>
+                          <th className="p-1.5 sm:p-3">Eid Bonus</th>
+                          <th className="p-1.5 sm:p-3">Sub-Total</th>
+                          <th className="p-1.5 sm:p-3">Org Saving</th>
+                          <th className="p-1.5 sm:p-3">Total Amount</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
                         {incrementResult.data.map((row, idx) => (
-                          <tr key={idx} className="text-center text-sm hover:bg-slate-50 transition-colors">
-                            <td className="p-3 font-medium text-slate-700">{row.month}</td>
-                            <td className="p-3">{row.iAmount}</td>
-                            <td className="p-3">{row.workingDays}</td>
-                            <td className="p-3">
+                          <tr key={idx} className="text-center hover:bg-slate-50 transition-colors">
+                            <td className="p-1.5 sm:p-3 font-medium text-slate-700">{row.month}</td>
+                            <td className="p-1.5 sm:p-3">{row.iAmount}</td>
+                            <td className="p-1.5 sm:p-3">{row.workingDays}</td>
+                            <td className="p-1.5 sm:p-3">
                               <input 
                                 type="text" 
                                 value={row.weekend} 
@@ -886,11 +886,11 @@ export default function Calculation() {
 
                                   setIncrementResult({...incrementResult, data: newData, totals});
                                 }}
-                                className="w-12 h-8 text-center border border-slate-200 rounded" 
+                                className="w-10 sm:w-12 h-7 sm:h-8 text-center border border-slate-200 rounded text-[10px] sm:text-xs" 
                               />
                             </td>
-                            <td className="p-3">{row.wAmount}</td>
-                            <td className="p-3">
+                            <td className="p-1.5 sm:p-3">{row.wAmount}</td>
+                            <td className="p-1.5 sm:p-3">
                               <input 
                                 type="text" 
                                 value={row.gHoliday} 
@@ -926,28 +926,28 @@ export default function Calculation() {
 
                                   setIncrementResult({...incrementResult, data: newData, totals});
                                 }}
-                                className="w-12 h-8 text-center border border-slate-200 rounded" 
+                                className="w-10 sm:w-12 h-7 sm:h-8 text-center border border-slate-200 rounded text-[10px] sm:text-xs" 
                               />
                             </td>
-                            <td className="p-3">{row.ghAmount}</td>
-                            <td className="p-3">{row.eidBonus}</td>
-                            <td className="p-3">{row.subTotal}</td>
-                            <td className="p-3">{row.orgSaving}</td>
-                            <td className="p-3 font-semibold">{row.totalAmount}</td>
+                            <td className="p-1.5 sm:p-3">{row.ghAmount}</td>
+                            <td className="p-1.5 sm:p-3">{row.eidBonus}</td>
+                            <td className="p-1.5 sm:p-3">{row.subTotal}</td>
+                            <td className="p-1.5 sm:p-3">{row.orgSaving}</td>
+                            <td className="p-1.5 sm:p-3 font-semibold">{row.totalAmount}</td>
                           </tr>
                         ))}
-                        <tr className="bg-slate-800 text-white font-bold text-sm">
-                          <td className="p-3">Total</td>
-                          <td className="p-3">{incrementResult.totals.iAmount}</td>
-                          <td className="p-3">{incrementResult.totals.workingDays}</td>
-                          <td className="p-3"></td>
-                          <td className="p-3">{incrementResult.totals.wAmount}</td>
-                          <td className="p-3"></td>
-                          <td className="p-3">{incrementResult.totals.ghAmount}</td>
-                          <td className="p-3">{incrementResult.totals.eidBonus}</td>
-                          <td className="p-3">{incrementResult.totals.subTotal}</td>
-                          <td className="p-3">{incrementResult.totals.orgSaving}</td>
-                          <td className="p-3">{incrementResult.totals.totalAmount}</td>
+                        <tr className="bg-slate-800 text-white font-bold text-[10px] sm:text-sm">
+                          <td className="p-1.5 sm:p-3">Total</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.iAmount}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.workingDays}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.weekend}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.wAmount}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.gHoliday}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.ghAmount}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.eidBonus}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.subTotal}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.orgSaving}</td>
+                          <td className="p-1.5 sm:p-3">{incrementResult.totals.totalAmount}</td>
                         </tr>
                       </tbody>
                     </table>
